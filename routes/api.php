@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/register', [userController::class, 'register']);
+Route::post('/registerforweb', [userController::class, 'registerforweb']);
 Route::post('/login', [userController::class, 'login']);
-Route::group(['middleware' => 'auth:api'], function () {
 
-});
+Route::post('user/password/email',  [userController::class,'userForgetPassword']);
+Route::post('user/password/code/check', [userController::class,'userCheckCode']);
+Route::post('user/password/reset', [userController::class ,'userResetPassword']);
 
 
 
