@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Mail;
 class userController extends Controller
 {
     //for phone app
-    public function register(Request $request){
+   /*
+   public function register(Request $request){
         $request->validate([
             'username'=>'required',
             'email'=>'required|email|unique:users',
@@ -92,7 +93,7 @@ class userController extends Controller
             'token'=>$token,
         ]);
 
-    }
+    }*/
     public function userForgetPassword(Request $request){
         $data = $request->validate([
             'email'=>'required|email|exists:users',

@@ -36,11 +36,15 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users'
+        ],
        'user' => [
            'driver' => 'session',
            'provider' => 'users'
        ],
-        'user_api' => [
+        'user-api' => [
             'driver' => 'passport',
             'provider' => 'users'
         ],
@@ -48,7 +52,7 @@ return [
             'driver' => 'session',
             'provider' => 'trainers'
         ],
-        'trainer_api' => [
+        'trainer-api' => [
             'driver' => 'passport',
             'provider' => 'trainers'
         ],
@@ -78,7 +82,7 @@ return [
         ],
         'trainers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\trainer::class,
+            'model' => App\Models\Trainer::class,
         ],
 
         // 'users' => [
