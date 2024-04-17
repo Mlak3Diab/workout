@@ -6,19 +6,22 @@ use App\Mail\SendCodeResetPassword;
 use App\Models\ResetCodePassword;
 use App\Models\Trainer;
 use App\Models\User;
+use App\Models\Weight;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Auth\Events\verified;
 
 
 class  AuthController extends Controller
 {
   public function userRegister(Request $request)
   {
-      $request->validate([
+        $request->validate([
           'username'=>'required',
           'email'=>'required|email|unique:users',
           'password' => ['required',
@@ -30,18 +33,24 @@ class  AuthController extends Controller
           'weight' => 'required',
           'length' => 'required',
           'age' => 'required|integer',
-      ]);
-      $input=$request->all();
-      $input['password']=bcrypt($input['password']);
-      $input['activation_token']=Str::random(60);
-      $user=User::query()->create($input);
-      $accesstoken= $user->createToken('MyApp',['user'])->accessToken;
+        ]);
+        $input=$request->all();
+        $input['password']=bcrypt($input['password']);
+        $input['activation_token']=Str::random(60);
+        $user=User::query()->create($input);
+        $accesstoken= $user->createToken('MyApp',['user'])->accessToken;
 
-      return response()->json([
+        Weight::create([
+        'weight_value' => $request->input('weight'),
+        'user_id' => $user->id,
+        ]);
+
+        return response()->json([
           'user'=>$user,
           'access_Token' => $accesstoken,
-      ]);
+        ]);
   }
+
   public function userLogin(Request $request){
      $request->validate([
           'email'=>'required',
@@ -136,7 +145,41 @@ class  AuthController extends Controller
         $passwordReset->delete();
 
         return response()->json(['message'=> 'password has been successfully reset ']);
+
     }
+
+    public function sendVerificationEmail(Request $request){
+
+        if($request->user()->hasVerifiedEmail()){
+            return response()->json([
+                'message' => 'Already Verified'
+            ]);
+        }
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json([
+            'status' => 'verification-link-sent'
+        ]);
+    }
+
+
+    public function verify(EmailVerificationRequest $request){
+        if($request->user()->hasVerifiedEmail()){
+            return response()->json([
+                'message' => 'Already Verified'
+            ]);
+        }
+        if($request->user()->markEmailAsVerified()){
+            event(new Verified($request->user()));
+        }
+
+        return response([
+            'message' => 'Email Has Been Verified'
+        ]);
+
+    }
+
+
 //////////////////////////////////////
 /// for trainer web
   public function trainerRegister(Request $request)

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Laravel\Passport\Passport;
 use Laravel\Passport\HasApiTokens;
 
@@ -34,6 +36,14 @@ class AuthServiceProvider extends ServiceProvider
             ]
         );
 
+        VerifyEmail::toMailUsing(function($notifiable,$url){
+            $spaUrl = "http://spa.test?email_verify_url=".$url;
+
+            return (new MailMessage)
+                ->subject('Verify Email Address')
+                ->line('Click The Button Below to Verify Your Email Address.')
+                ->action('Verify Email Address',$spaUrl);
+        });
         //
     }
 }

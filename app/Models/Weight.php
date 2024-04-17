@@ -9,6 +9,6 @@ class Weight extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'weight_value',
+        'weight_value','user_id',
     ];
 }
