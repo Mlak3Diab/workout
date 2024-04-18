@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TrainerOperationController;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
@@ -31,9 +32,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('trainer/register',[AuthController::class, 'trainerRegister']);
 Route::post('trainer/login',[AuthController::class, 'trainerLogin']);
-Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer'] ],function(){
-    Route::post('logout',[AuthController::class, 'trainerLogout']);
-});
 Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPassword']);
 Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);
 Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);
+Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer'] ],function(){
+    Route::post('logout',[AuthController::class, 'trainerLogout']);
+    Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);
+
+});
+
