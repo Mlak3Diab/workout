@@ -26,7 +26,7 @@ class UserOperationController extends Controller
         $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
         $length = $user->length;
 
-        $bmi = $weight / ($length * $length);
+        $bmi = double($weight / ($length * $length));
 
         // Update user's BMI
         $user->BMI = $bmi;
@@ -56,6 +56,7 @@ class UserOperationController extends Controller
             'message'=>'The Weight Added Succesfully'
             ]);
     }
+
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
 

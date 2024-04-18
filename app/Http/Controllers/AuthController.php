@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Auth\Events\verified;
+use Illuminate\Auth\Events\Registered;
 
 
 class  AuthController extends Controller
@@ -148,6 +149,7 @@ class  AuthController extends Controller
 
     }
 
+    /*
     public function sendVerificationEmail(Request $request){
 
         if($request->user()->hasVerifiedEmail()){
@@ -155,6 +157,7 @@ class  AuthController extends Controller
                 'message' => 'Already Verified'
             ]);
         }
+
         $request->user()->sendEmailVerificationNotification();
 
         return response()->json([
@@ -178,7 +181,7 @@ class  AuthController extends Controller
         ]);
 
     }
-
+    */
 
 //////////////////////////////////////
 /// for trainer web
