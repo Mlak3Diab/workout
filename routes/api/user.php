@@ -41,5 +41,7 @@ Route::group(['prefix' => 'user','middleware' => [/*'verified',*/'auth:user-api'
 
     Route::get('logout',[AuthController::class, 'userLogout']);
     Route::get('getBMI',[UserOperationController::class, 'GetBMI']);
+    Route::post('add_user_profile_image',[UserOperationController::class, 'addProfilePicture']);
+
 
 });

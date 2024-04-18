@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
+use Illuminate\Support\Facades\Storage;
 
 
 class UserOperationController extends Controller
@@ -54,7 +55,25 @@ class UserOperationController extends Controller
         return response()->json([
             'message'=>'The Weight Added Succesfully'
             ]);
-
     }
+    public function addProfilePicture(Request $request) {
+        $user = auth()->user();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            // التحقق مما إذا كان هناك صورة قديمة، إذا كانت هناك، احذفها
+            if ($user->image) {
+                Storage::delete($user->image);
+            }
+                // تخزين الصورة الجديدة وتحديث المسار في قاعدة البيانات
+                $path = $image->store('image');
+                $user->image = $path;
+                $user->save();
+            return response()->json(['message' => 'Profile picture updated successfully'], 200);
+        } else {
+            return response()->json(['error' => 'No image uploaded'], 400);
+        }
+    }
+
 
 }
