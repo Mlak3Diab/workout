@@ -38,12 +38,6 @@ Route::post('user/password/reset', [AuthController::class ,'userResetPassword'])
 
 Route::post('user/email/verification_notification',[AuthController::class, 'sendVerificationEmail']);
 Route::get('user/verify-email/{id}/{hash}',[AuthController::class, 'verify'])->name('verification.verify');
-Route::group(['prefix' => 'user','middleware' => [/*'verified',*/'auth:user-api','scopes:user'] ],function() {
-
-// Verify email
-    Route::get('user/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
 
 // Resend link to verify email
     Route::post('user/email/verify/resend', function (Request $request) {
@@ -52,7 +46,7 @@ Route::group(['prefix' => 'user','middleware' => [/*'verified',*/'auth:user-api'
     })->middleware(['auth:user-api', 'throttle:6,1'])->name('verification.send');
 
 
-   // Route::group(['prefix' => 'user', 'middleware' => ['verified', 'auth:user-api', 'scopes:user']], function () {
+    Route::group(['prefix' => 'user', 'middleware' => ['verified', 'auth:user-api', 'scopes:user']], function () {
 
         Route::get('logout', [AuthController::class, 'userLogout']);
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);

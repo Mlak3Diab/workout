@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
-class Trainer extends Model implements Authenticatable ,MustVerifyEmail
+class Trainer extends Model  implements Authenticatable 
 {
     use HasFactory ,HasApiTokens ,AuthenticableTrait;
     protected $fillable = [
@@ -28,4 +28,5 @@ class Trainer extends Model implements Authenticatable ,MustVerifyEmail
         'email_verified_at' => 'datetime',
 
     ];
+
 }
