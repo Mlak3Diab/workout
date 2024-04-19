@@ -38,6 +38,7 @@ Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassw
 Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer'] ],function(){
     Route::post('logout',[AuthController::class, 'trainerLogout']);
     Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);
+    Route::get('getinfo',[TrainerOperationController::class, 'getinfo']);
 
 });
 

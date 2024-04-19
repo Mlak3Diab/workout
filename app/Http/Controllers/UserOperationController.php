@@ -59,8 +59,12 @@ class UserOperationController extends Controller
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
 
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
+            $request->validate([
+                'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
             // التحقق مما إذا كان هناك صورة قديمة، إذا كانت هناك، احذفها
             if ($user->image) {
                 Storage::delete($user->image);
@@ -73,6 +77,14 @@ class UserOperationController extends Controller
         } else {
             return response()->json(['error' => 'No image uploaded'], 400);
         }
+    }
+    public function getinfo(Request $request){
+        $user_id=auth()->user()->id;
+        $user=User::where('id',$user_id)->first();
+        return response()->json([
+            'status'=>true,
+            'data'=>$user,
+        ]);
     }
 
 

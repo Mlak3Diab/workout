@@ -36,12 +36,9 @@ Route::post('user/password/code/check', [AuthController::class,'userCheckCode'])
 Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);
 Route::post('user/email/verification_notification',[AuthController::class, 'sendVerificationEmail']);
 Route::get('user/verify-email/{id}/{hash}',[AuthController::class, 'verify'])->name('verification.verify');
-
 Route::group(['prefix' => 'user','middleware' => [/*'verified',*/'auth:user-api','scopes:user'] ],function(){
-
     Route::get('logout',[AuthController::class, 'userLogout']);
     Route::get('getBMI',[UserOperationController::class, 'GetBMI']);
     Route::post('add_user_profile_image',[UserOperationController::class, 'addProfilePicture']);
-
-
+    Route::get('getinfo',[UserOperationController::class, 'getinfo']);
 });
