@@ -26,7 +26,7 @@ class UserOperationController extends Controller
         $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
         $length = $user->length;
 
-        $bmi = double($weight / ($length * $length));
+        $bmi = $weight / ($length * $length);
 
         // Update user's BMI
         $user->BMI = $bmi;

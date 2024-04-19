@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\User;
+//use App\Models\Trainer;
 
 class VerifyEmailController extends Controller
 {
@@ -24,4 +25,22 @@ class VerifyEmailController extends Controller
 
         return redirect(env('FRONT_URL') . '/email/verify/success');
     }
+
+    /*
+    public function __invokeTrainer(Request $request): RedirectResponse
+    {
+        $trainer = Trainer::find($request->route('id'));
+
+        if ($trainer->hasVerifiedEmail()) {
+            return redirect(env('FRONT_URL') . '/trainer/email/verify/already-success');
+        }
+
+        if ($trainer->markEmailAsVerified()) {
+            event(new Verified($trainer));
+        }
+
+        return redirect(env('FRONT_URL') . '/trainer/email/verify/success');
+    }
+    */
+
 }
