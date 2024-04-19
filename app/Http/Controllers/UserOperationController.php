@@ -56,6 +56,7 @@ class UserOperationController extends Controller
             'message'=>'The Weight Added Succesfully'
             ]);
     }
+
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
 
