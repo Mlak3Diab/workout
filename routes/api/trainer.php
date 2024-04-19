@@ -49,7 +49,7 @@ Route::post('trainer/email/verify/resend', function (Request $request) {
 */
 
 
-Route::group( ['prefix' => 'trainer','middleware' => ['verified','auth:trainer-api','scopes:trainer'] ],function(){
+Route::group( ['prefix' => 'trainer','middleware' => [/*'verified',*/'auth:trainer-api','scopes:trainer'] ],function(){
     Route::post('logout',[AuthController::class, 'trainerLogout']);
     Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);
 

@@ -35,15 +35,18 @@ Route::post('user/login',[AuthController::class, 'userLogin'])->middleware('veri
 Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);
 Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);
 Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);
+
 // Verify email
 Route::get('user/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
     ->middleware(['signed', 'throttle:6,1'])
     ->name('verification.verify');
+
 // Resend link to verify email
 Route::post('user/email/verify/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['message' => 'Verification link sent!']);
 })->middleware(['auth:user-api', 'throttle:6,1'])->name('verification.send');
+
 
 
 
