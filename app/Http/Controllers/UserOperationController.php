@@ -20,43 +20,47 @@ class UserOperationController extends Controller
         $user_id = auth()->user()->id;
 
         $user = User::findOrFail($user_id);
-
         //find the weight and length
-        $weight = Weight::where('user_id', $user_id)->latest()->first();
-        $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
+       $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
         $length = $user->length;
 
-        $bmi = $weight / ($length * $length);
-
-        // Update user's BMI
+       $bmi = ($lastWeight->weight_value / ($length * $length)) *10000;
+       //  Update user's BMI
         $user->BMI = $bmi;
         $user->save();
-
         return response()->json([
+            'BMI' => round($bmi, 2),
             'message' => 'BMI updated successfully',
-            'BMI' => $bmi,
-            'weight' => $weight
         ]);
     }
-
     // Add Weight - POST
     public function addWeight(Request $request){
         $user_id = auth()->user()->id;
         $user = User::findOrFail($user_id);
 
         $request->validate([
-            "weight" => "required"
+            "weight" => 'required|numeric|min:1'
         ]);
 
         $weight = new Weight();
         $weight -> weight_value = $request -> weight;
         $weight -> user_id = $user_id;
-
+        $weight->save();
         return response()->json([
             'message'=>'The Weight Added Succesfully'
             ]);
     }
+    //get al weight for user _report - GET
+    public function getallweights(Request $request){
+        $user_id=auth()->user()->id;
+        $array_weight=Weight::where('user_id',$user_id)->get();
+        return response()->json([
+            'weights' => $array_weight,
+            'message' =>'your all weights ',
+        ]);
 
+    }
+    //add picture -POST
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
 
@@ -79,13 +83,43 @@ class UserOperationController extends Controller
             return response()->json(['error' => 'No image uploaded'], 400);
         }
     }
-    public function getinfo(Request $request){
+    //get info for user _GET
+    public function getinfo(){
         $user_id=auth()->user()->id;
         $user=User::where('id',$user_id)->first();
         return response()->json([
             'status'=>true,
             'data'=>$user,
         ]);
+    }
+    //edit username _POST
+    public function editusername(Request $request){
+        $user=auth()->user();
+        $request->validate([ 'username'=>'required',]);
+        $user->username=$request->username;
+        $user->save();
+        return response()->json([
+            'message' => 'your name edit successfully ',
+            'user' => $user,
+        ]);
+
+
+    }
+    // delete your profile -DELETE
+    public function deleteprofileimage(){
+        $user_id = auth()->user()->id;
+        $user=User::where('id',$user_id)->first();
+        // Delete profile picture if it exists
+        if ($user->image) {
+            Storage::delete($user->image);
+            $user->image = null;
+            $user->save();
+
+            return response()->json(['message' => 'Profile picture deleted successfully']);
+        } else {
+            return response()->json(['message' => 'No profile picture to delete'], 404);
+        }
+
     }
 
 

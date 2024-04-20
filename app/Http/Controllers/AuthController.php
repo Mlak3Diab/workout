@@ -31,8 +31,8 @@ class  AuthController extends Controller
               'regex:/[0-9]/',      // must contain at least one digit
               'regex:/[@$!%*#?&]/', // must contain a special character
           ],
-          'weight' => 'required',
-          'length' => 'required',
+          'weight' => 'required|numeric|min:1',
+          'length' => 'required|numeric|min:1|integer',
           'age' => 'required|integer',
         ]);
         $input=$request->all();
@@ -51,7 +51,6 @@ class  AuthController extends Controller
           'access_Token' => $accesstoken,
         ]);
   }
-
   public function userLogin(Request $request){
      $request->validate([
           'email'=>'required',
@@ -148,11 +147,6 @@ class  AuthController extends Controller
         return response()->json(['message'=> 'password has been successfully reset ']);
 
     }
-
-
-
-
-
 //////////////////////////////////////
 /// for trainer web
   public function trainerRegister(Request $request)

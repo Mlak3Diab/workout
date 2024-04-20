@@ -52,4 +52,13 @@ Route::get('user/verify-email/{id}/{hash}',[AuthController::class, 'verify'])->n
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);
         Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);
         Route::get('getinfo', [UserOperationController::class, 'getinfo']);
+        Route::post('add_weight', [UserOperationController::class, 'addWeight']);
+        Route::get('getweights', [UserOperationController::class, 'getallweights']);
+        Route::post('editusername', [UserOperationController::class, 'editusername']);
+        Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);
+
+
+
+
+
     });

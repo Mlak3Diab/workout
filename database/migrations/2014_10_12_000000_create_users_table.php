@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->double('weight')->nullable();
-            $table->double('length')->nullable();
+            $table->integer('length')->nullable();
             $table->integer('age')->nullable();
             $table->double('BMI')->nullable();
             $table->double('total_time_practice')->nullable();
