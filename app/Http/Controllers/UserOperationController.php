@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
+use App\Models\Course;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -21,7 +22,7 @@ class UserOperationController extends Controller
 
         $user = User::findOrFail($user_id);
         //find the weight and length
-       $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
+        $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
         $length = $user->length;
 
        $bmi = ($lastWeight->weight_value / ($length * $length)) *10000;
@@ -33,6 +34,7 @@ class UserOperationController extends Controller
             'message' => 'BMI updated successfully',
         ]);
     }
+
     // Add Weight - POST
     public function addWeight(Request $request){
         $user_id = auth()->user()->id;
@@ -50,6 +52,7 @@ class UserOperationController extends Controller
             'message'=>'The Weight Added Succesfully'
             ]);
     }
+
     //get al weight for user _report - GET
     public function getallweights(Request $request){
         $user_id=auth()->user()->id;
@@ -58,8 +61,8 @@ class UserOperationController extends Controller
             'weights' => $array_weight,
             'message' =>'your all weights ',
         ]);
-
     }
+
     //add picture -POST
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
@@ -83,6 +86,7 @@ class UserOperationController extends Controller
             return response()->json(['error' => 'No image uploaded'], 400);
         }
     }
+
     //get info for user _GET
     public function getinfo(){
         $user_id=auth()->user()->id;
@@ -92,6 +96,7 @@ class UserOperationController extends Controller
             'data'=>$user,
         ]);
     }
+
     //edit username _POST
     public function editusername(Request $request){
         $user=auth()->user();
@@ -102,9 +107,8 @@ class UserOperationController extends Controller
             'message' => 'your name edit successfully ',
             'user' => $user,
         ]);
-
-
     }
+
     // delete your profile -DELETE
     public function deleteprofileimage(){
         $user_id = auth()->user()->id;
@@ -121,6 +125,25 @@ class UserOperationController extends Controller
         }
 
     }
+
+    //add total time and kcal when finish the course -
+    public function finishCourse($course_id){
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+
+        $course = Course::where('id',$course_id)->first();
+        $kcal = $course->kcal;
+        $time = $course->total_time;
+
+        $user->total_time_practice = $time;
+        $user->total_calorie = $kcal;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the time and calories added successfully'
+        ]);
+    }
+
 
 
 }
