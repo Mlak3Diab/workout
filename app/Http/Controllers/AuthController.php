@@ -22,7 +22,7 @@ class  AuthController extends Controller
 {
   public function userRegister(Request $request)
   {
-        $request->validate([
+        $user=$request->validate([
           'username'=>'required',
           'email'=>'required|email|unique:users',
           'password' => ['required',
@@ -45,8 +45,9 @@ class  AuthController extends Controller
         'weight_value' => $request->input('weight'),
         'user_id' => $user->id,
         ]);
-
+     $user->sendEmailVerificationNotification();
         return response()->json([
+          'messsage' =>'User registered successfully. Please verify your email. ',
           'user'=>$user,
           'access_Token' => $accesstoken,
         ]);
@@ -56,6 +57,14 @@ class  AuthController extends Controller
           'email'=>'required',
           'password' => 'required',
          ]);
+    $user=User::where('email',$request->email)->first();
+      // Attempt to log in the user
+      // Check if user is verified
+
+
+      if ($user->email_verified_at == null) {
+          return response()->json(['message'=>'your email address bot verified']);
+      }
      if(auth()->guard('user')->attempt($request->only('email','password'))) {
          config(['auth.guards.api.provider' => 'user']);
          $user = User::query()->select('users.*')->find(auth()->guard('user')->user()->id);

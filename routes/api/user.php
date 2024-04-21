@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -31,23 +32,14 @@ use App\Http\Controllers\VerifyEmailController;
 
 
 Route::post('user/register',[AuthController::class, 'userRegister']);
-Route::post('user/login',[AuthController::class, 'userLogin'])->middleware('verified');
+Route::post('user/login',[AuthController::class, 'userLogin']);
 Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);
 Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);
 Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);
+Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::post('user/email/verification_notification',[AuthController::class, 'sendVerificationEmail']);
-Route::get('user/verify-email/{id}/{hash}',[AuthController::class, 'verify'])->name('verification.verify');
-
-// Resend link to verify email
-    Route::post('user/email/verify/resend', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return response()->json(['message' => 'Verification link sent!']);
-    })->middleware(['auth:user-api', 'throttle:6,1'])->name('verification.send');
-
-
-    Route::group(['prefix' => 'user', 'middleware' => ['verified', 'auth:user-api', 'scopes:user']], function () {
-
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::group(['prefix' => 'user', 'middleware' => ['verified', 'auth:user-api', 'scopes:user']], function () {
         Route::get('logout', [AuthController::class, 'userLogout']);
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);
         Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);

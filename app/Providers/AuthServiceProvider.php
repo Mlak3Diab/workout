@@ -37,12 +37,13 @@ class AuthServiceProvider extends ServiceProvider
         );
 
         VerifyEmail::toMailUsing(function($notifiable,$url){
-            $spaUrl = "http://homeworkout?email_verify_url=".$url;
+            $spaUrl = $url;
 
             return (new MailMessage)
                 ->subject('Verify Email Address')
                 ->line('Click The Button Below to Verify Your Email Address.')
-                ->action('Verify Email Address',$spaUrl);
+                ->action('Verify Email Address',$spaUrl)
+                ->view('auth.verify', compact('url'));
         });
 
         //
