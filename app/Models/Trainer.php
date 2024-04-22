@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
-class Trainer extends Model  implements Authenticatable
+//use Illuminate\Auth\MustVerifyEmail;
+class Trainer extends Model  implements Authenticatable , MustVerifyEmail
 {
     use HasFactory ,HasApiTokens ,AuthenticableTrait;
+    public function hasVerifiedEmail(){}
+    public function markEmailAsVerified(){}
+    public function sendEmailVerificationNotification(){}
+    public function getEmailForVerification(){}
+
+
     protected $fillable = [
         'username',
         'email',
@@ -18,6 +25,11 @@ class Trainer extends Model  implements Authenticatable
         'cv',
         'image',
         ];
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
 
     protected $hidden = [
         'password',

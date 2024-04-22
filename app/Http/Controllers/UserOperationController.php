@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\article;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -71,7 +72,7 @@ class UserOperationController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $request->validate([
-                'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
+                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
             // التحقق مما إذا كان هناك صورة قديمة، إذا كانت هناك، احذفها
             if ($user->image) {
@@ -143,6 +144,8 @@ class UserOperationController extends Controller
             'message' => 'the time and calories added successfully'
         ]);
     }
+
+
 
 
 

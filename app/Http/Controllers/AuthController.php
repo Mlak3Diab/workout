@@ -177,6 +177,7 @@ class  AuthController extends Controller
 
         $trainer=Trainer::query()->create($input);
         $accesstoken= $trainer->createToken('MyApp',['trainer'])->accessToken;
+        $trainer->sendEmailVerificationNotification();
         return response()->json([
             'trainer'=>$trainer,
             'access_Token' => $accesstoken,
@@ -187,6 +188,14 @@ class  AuthController extends Controller
             'email'=>'required|email',
             'password' => 'required',
         ]);
+      $user=Trainer::where('email',$request->email)->first();
+      // Attempt to log in the user
+      // Check if user is verified
+
+
+      if ($user->email_verified_at == null) {
+          return response()->json(['message'=>'your email address bot verified']);
+      }
         if(auth()->guard('trainer')->attempt($request->only('email','password'))) {
             config(['auth.guards.api.provider' => 'trainer']);
             $trainer = Trainer::query()->select('trainers.*')->find(auth()->guard('trainer')->user()['id']);
