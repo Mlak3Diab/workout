@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('exercises', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image')->nullable();
-            $table->string('level');
-            $table->integer('total_time');
-            $table->integer('kcal');
-            $table->string('type');
-            $table->foreignId('trainer_id')->constrained('trainers')->cascadeOnDelete();
+            $table->string('description');
+            $table->string('gif');
+            $table->integer('calories');
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('exercises');
     }
 };
