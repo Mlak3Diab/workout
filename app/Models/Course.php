@@ -18,4 +18,11 @@ class Course extends Model
         'type',
 
     ];
+
+    public function exercises()
+    {
+        return $this->belongsToMany(Exercise::class);
+    }
+
+
 }

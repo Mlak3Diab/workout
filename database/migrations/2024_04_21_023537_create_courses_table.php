@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
-            $table->string('level');
             $table->integer('total_time');
             $table->integer('kcal');
-            $table->string('type');
-            $table->foreignId('trainer_id')->constrained('trainers')->cascadeOnDelete();
+            $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
+            $table->enum('level',['beginner','intermediate','advanced']);
             $table->timestamps();
         });
     }

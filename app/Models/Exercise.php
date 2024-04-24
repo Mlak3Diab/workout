@@ -15,4 +15,11 @@ class Exercise extends Model
         'gif',
         'calories',
     ];
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+
 }
