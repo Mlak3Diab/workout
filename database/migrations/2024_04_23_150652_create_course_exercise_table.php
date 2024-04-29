@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->foreignId('exercise_id')->constrained()->onDelete('cascade');
-            $table->integer('time');
+            $table->integer('time')->nullable();
+            $table->integer('repetition')->nullable();
             $table->timestamps();
         });
     }

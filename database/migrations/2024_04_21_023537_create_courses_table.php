@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
-            $table->integer('total_time');
-            $table->integer('kcal');
+            $table->integer('kcal')->nullable();
+            $table->integer('total_time')->nullable();
             $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
             $table->enum('level',['beginner','intermediate','advanced']);
             $table->timestamps();
