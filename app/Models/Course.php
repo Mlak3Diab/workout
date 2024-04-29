@@ -15,7 +15,7 @@ class Course extends Model
         'level',
         'total_time',
         'kcal',
-        'type',
+        'muscle',
 
     ];
 
