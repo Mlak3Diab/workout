@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Course;
+use App\Models\Exercise;
+use App\Models\Muscle;
+use App\Models\Plan;
 use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Type\Integer;
 
 class TrainerOperationController extends Controller
 {
@@ -79,8 +86,26 @@ class TrainerOperationController extends Controller
         {
             return response()->json([
                 'message'=>'unauthorized',
-            ]);
-        }
+            ]);}}
 
+    //edit username _POST
+    public function editusername(Request $request){
+        $trainer=auth()->user();
+        $request->validate([ 'username'=>'required',]);
+        $trainer->username=$request->username;
+        $trainer->save();
+        return response()->json([
+            'message' => 'your name edit successfully ',
+            'user' => $trainer,
+        ]);
     }
+    //get all exercises GET
+    public function getallexercises(){
+        $exercises=Exercise::all();
+        return response()->json([
+            'data'=>$exercises,
+        ]);
+    }
+
+
 }

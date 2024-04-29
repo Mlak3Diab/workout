@@ -51,4 +51,10 @@ Route::group(['prefix' => 'user', 'middleware' => [/*'verified', */'auth:user-ap
         Route::post('editusername', [UserOperationController::class, 'editusername']);
         Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);
         Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);
+        Route::get('getallarticles',[UserOperationController::class, 'getallarticles']);
+        Route::get('getinfoonearticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);
+        Route::get('getplan',[UserOperationController::class, 'getplan']);
+
+
+
     });

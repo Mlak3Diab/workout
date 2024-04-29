@@ -25,4 +25,6 @@ class Course extends Model
     }
 
 
+
+
 }

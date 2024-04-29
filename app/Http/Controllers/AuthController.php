@@ -91,7 +91,7 @@ class  AuthController extends Controller
         ResetCodePassword::query()->where('email', $request['email'])->delete();
 
         //generate random code
-        $data['code']= mt_rand(100000 , 999999);
+        $data['code']= mt_rand(10000 , 99999);
 
         // create a new code
         $codeData= ResetCodePassword::query()->create($data);
@@ -222,7 +222,7 @@ class  AuthController extends Controller
         ResetCodePassword::query()->where('email', $request['email'])->delete();
 
         //generate random code
-        $data['code']= mt_rand(100000 , 999999);
+        $data['code']= mt_rand(10000 , 99999);
 
         // create a new code
         $codeData= ResetCodePassword::query()->create($data);
