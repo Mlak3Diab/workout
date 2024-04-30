@@ -31,6 +31,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'total_calorie',
         'image',
     ];
+    public function Plan(){
+        return $this->hasOne(Plan::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

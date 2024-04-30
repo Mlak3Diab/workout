@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\article;
+use App\Models\Exercise;
+use App\Models\Muscle;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -143,6 +146,51 @@ class UserOperationController extends Controller
         return response()->json([
             'message' => 'the time and calories added successfully'
         ]);
+    }
+    //get all articles GET
+    public function getallarticles(){
+        $articles=Article::all();
+        return response()->json([
+            'data'=>$articles,
+        ]);
+    }
+    // get one info article
+    public function getinfoonearticle($article_id){
+        $article=Article::findOrFail($article_id)->first();
+        return response()->json([
+            'data'=>$article,
+        ]);
+    }
+    protected function getplan(Request $request){
+        for($j = 1 ; $j<=4;$j++ ){
+            for($i = 1 ; $i<=sizeof([$request]);$i++ ){
+                $muscle=Muscle::first($request[$i]);
+                $name=$muscle->muscle_name;
+                if($name=='abs'){
+                    $ex1=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();
+                }
+                if($name=='chest'){
+                    $ex2=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();
+
+                } if($name=='arm'){
+                    $ex3=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();
+
+                } if($name=='leg'){
+                    $ex4=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();
+
+                } if($name=='shoulder and back'){
+                    $ex5=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();
+
+                } if($name=='Full body') {
+                    $ex6=DB::table('courses')->inRandomOrder()->where('muscle',$name)->limit(4)->get();}
+            }
+            $plan=new Plan();
+            $week=array_merge($ex1,$ex2,$ex3,$ex4,$ex5,$ex6);
+            $number_week=$i;
+            $plan->course_exercise_id=$week;
+            $plan->number_of_week=$number_week;
+            $plan->save();
+        }
     }
 
 
