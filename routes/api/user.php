@@ -53,13 +53,11 @@ Route::group(['prefix' => 'user', 'middleware' => [/*'verified', */'auth:user-ap
         Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);
         Route::get('getallarticles',[UserOperationController::class, 'getallarticles']);
         Route::get('getinfoonearticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);
-<<<<<<< HEAD
         Route::post('makeplan',[UserOperationController::class, 'makeplan']);
-=======
         Route::get('getplan',[UserOperationController::class, 'getplan']);
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);
         Route::get('getAllExercisesForCourse',[UserOperationController::class, 'getAllExercisesForCourse']);
->>>>>>> 82cb17469aa9cd583b5b7884fe20c53c516ad7c1
+
 
 
 
