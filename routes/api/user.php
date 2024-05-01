@@ -54,6 +54,8 @@ Route::group(['prefix' => 'user', 'middleware' => [/*'verified', */'auth:user-ap
         Route::get('getallarticles',[UserOperationController::class, 'getallarticles']);
         Route::get('getinfoonearticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);
         Route::get('getplan',[UserOperationController::class, 'getplan']);
+        Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);
+        Route::get('getAllExercisesForCourse',[UserOperationController::class, 'getAllExercisesForCourse']);
 
 
 
