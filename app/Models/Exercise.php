@@ -20,6 +20,11 @@ class Exercise extends Model
     {
         return $this->belongsToMany(Course::class);
     }
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
+
 
 
 }

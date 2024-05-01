@@ -23,7 +23,7 @@ class CourseSeeder extends Seeder
             'level' => 'beginner',
         ]);
 
-        $exercise1 = Exercise::where('id',1)->first();
+        $exercise1 = Exercise::find(1);
         $courseAbsBeginner->exercises()->attach([$exercise1->id], ['repetition' => 16, 'time' => 30]);
 
         $exercise2 = Exercise::where('id',74)->first();
@@ -358,6 +358,7 @@ class CourseSeeder extends Seeder
 
         // You can add more exercises and associate them with courses as needed
     */
+
 
     }
 }
