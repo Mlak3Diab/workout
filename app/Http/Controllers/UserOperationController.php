@@ -463,7 +463,26 @@ class UserOperationController extends Controller
         ]);
     }
 
+    public function getAllCourses(){
 
+        $courses = Course::all();
+        return response()->json([
+            'massege' => 'the all courses',
+            'data' => $courses
+        ]);
+
+    }
+
+    public function getAllExercisesForCourse($course_id){
+
+        $course = Course::findOrFail($course_id);
+        $exercises = $course->exercises()->get();
+        return response()->json([
+            'massege' => 'the all exercises for one course',
+            'data' => $exercises,
+        ]);
+
+    }
 
 
 
