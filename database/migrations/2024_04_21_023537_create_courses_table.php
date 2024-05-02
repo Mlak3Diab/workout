@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('kcal')->nullable();
+            $table->integer('total_calories')->nullable();
             $table->integer('total_time')->nullable();
             $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
             $table->enum('level',['beginner','intermediate','advanced']);
