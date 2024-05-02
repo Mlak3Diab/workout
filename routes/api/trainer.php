@@ -51,7 +51,7 @@ Route::group( ['prefix' => 'trainer','middleware' => [/*'verified',*/'auth:train
     Route::delete('deletearticle/{article_id}',[TrainerOperationController::class, 'deletearticle']);
     Route::post('editusername', [TrainerOperationController::class, 'editusername']);
     Route::get('getallexercises', [TrainerOperationController::class, 'getallexercises']);
+    Route::post('addChallenge', [TrainerOperationController::class, 'addChallenge']);
 
 
 });
-

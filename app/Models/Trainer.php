@@ -38,12 +38,18 @@ class Trainer extends Model  implements Authenticatable , MustVerifyEmail
         'image',
       'email_verified_at',
 
-];
+    ];
+
+
     public function articles()
     {
         return $this->hasMany(Article::class);
     }
 
+    public function challenges()
+    {
+        return $this->hasMany(Challenge::class);
+    }
 
     protected $hidden = [
         'password',

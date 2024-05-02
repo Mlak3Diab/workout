@@ -24,7 +24,10 @@ class Exercise extends Model
     {
         return $this->belongsToMany(Plan::class);
     }
-
+    public function challenges()
+    {
+        return $this->belongsToMany(Challenge::class);
+    }
 
 
 }
