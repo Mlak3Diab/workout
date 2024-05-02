@@ -193,7 +193,7 @@ class UserOperationController extends Controller
 
         for($j = 1 ; $j<=4;$j++ ){
            for($i = 1; $i<=$loop;$i++ ){
-                if(!$request->name && $request->name1=='abs'){
+                if( $request->name1=='abs'){
                     $course=Course::where('muscle',$request->name1)->where('level',"beginner")->first();
                     $course_id=$course->id;
                     $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
@@ -411,47 +411,222 @@ class UserOperationController extends Controller
                         $plan19->save();
                         $plan20->save();
                 }//
-               else if($request->name6=='Full body'){
-                    $course=Course::where('level',"beginner")->first();
-                    $course_id=$course->id;
-                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                        $plan21 = new Plan();
-                        $plan21->exercise_id=$ec[0]->exercise_id;
-                        $plan21->time=$ec[0]->time;
-                        $plan21->repetition=$ec[0]->repetition;
+               else if( $request->name6=='Full body'){
 
-                        $plan22 = new Plan();
-                        $plan22->exercise_id=$ec[1]->exercise_id;
-                        $plan22->time=$ec[1]->time;
-                        $plan22->repetition=$ec[1]->repetition;
+                   $course1=Course::where('muscle','abs')->where('level',"beginner")->first();
+                   $course_id1=$course1->id;
+                   $ec=DB::table('course_exercise')->where('course_id',$course_id1)->inRandomOrder()->limit(4)->get();
 
-                        $plan23 = new Plan();
-                        $plan23->exercise_id=$ec[2]->exercise_id;
-                        $plan23->time=$ec[2]->time;
-                        $plan23->repetition=$ec[2]->repetition;
+                   $plan21 = new Plan();
+                   $plan21->exercise_id=$ec[0]->exercise_id;
+                   $plan21->time=$ec[0]->time;
+                   $plan21->repetition=$ec[0]->repetition;
 
-                        $plan24 = new Plan();
-                        $plan24->exercise_id=$ec[3]->exercise_id;
-                        $plan24->time=$ec[3]->time;
-                        $plan24->repetition=$ec[3]->repetition;
 
-                        $plan21->user_id=$user_id;
-                        $plan21->plan=$user_id;
-                        $plan21->number_of_week=$j;
-                        $plan22->user_id=$user_id;
-                        $plan22->plan=$user_id;
-                        $plan22->number_of_week=$j;
-                        $plan23->user_id=$user_id;
-                        $plan23->plan=$user_id;
-                        $plan23->number_of_week=$j;
-                        $plan24->user_id=$user_id;
-                        $plan24->plan=$user_id;
-                        $plan24->number_of_week=$j;
+                   $plan22 = new Plan();
+                   $plan22->exercise_id=$ec[1]->exercise_id;
+                   $plan22->time=$ec[1]->time;
+                   $plan22->repetition=$ec[1]->repetition;
 
-                        $plan21->save();
-                        $plan22->save();
-                        $plan23->save();
-                        $plan24->save();
+                   $plan23 = new Plan();
+                   $plan23->exercise_id=$ec[2]->exercise_id;
+                   $plan23->time=$ec[2]->time;
+                   $plan23->repetition=$ec[2]->repetition;
+
+                   $plan24 = new Plan();
+                   $plan24->exercise_id=$ec[3]->exercise_id;
+                   $plan24->time=$ec[3]->time;
+                   $plan24->repetition=$ec[3]->repetition;
+
+                   $plan21->user_id=$user_id;
+                   $plan21->plan=$user_id;
+                   $plan21->number_of_week=$j;
+                   $plan22->user_id=$user_id;
+                   $plan22->plan=$user_id;
+                   $plan22->number_of_week=$j;
+                   $plan23->user_id=$user_id;
+                   $plan23->plan=$user_id;
+                   $plan23->number_of_week=$j;
+                   $plan24->user_id=$user_id;
+                   $plan24->plan=$user_id;
+                   $plan24->number_of_week=$j;
+
+                   $plan21->save();
+                   $plan22->save();
+                   $plan23->save();
+                   $plan24->save();
+
+                   $course2=Course::where('muscle','arm')->where('level',"beginner")->first();
+                   $course_id2=$course2->id;
+                   $ec=DB::table('course_exercise')->where('course_id',$course_id2)->inRandomOrder()->limit(4)->get();
+
+                   $plan25 = new Plan();
+                   $plan25->exercise_id=$ec[0]->exercise_id;
+                   $plan25->time=$ec[0]->time;
+                   $plan25->repetition=$ec[0]->repetition;
+
+
+                   $plan26 = new Plan();
+                   $plan26->exercise_id=$ec[1]->exercise_id;
+                   $plan26->time=$ec[1]->time;
+                   $plan26->repetition=$ec[1]->repetition;
+
+                   $plan27 = new Plan();
+                   $plan27->exercise_id=$ec[2]->exercise_id;
+                   $plan27->time=$ec[2]->time;
+                   $plan27->repetition=$ec[2]->repetition;
+
+                   $plan28 = new Plan();
+                   $plan28->exercise_id=$ec[3]->exercise_id;
+                   $plan28->time=$ec[3]->time;
+                   $plan28->repetition=$ec[3]->repetition;
+
+                   $plan25->user_id=$user_id;
+                   $plan25->plan=$user_id;
+                   $plan25->number_of_week=$j;
+                   $plan26->user_id=$user_id;
+                   $plan26->plan=$user_id;
+                   $plan26->number_of_week=$j;
+                   $plan27->user_id=$user_id;
+                   $plan27->plan=$user_id;
+                   $plan27->number_of_week=$j;
+                   $plan28->user_id=$user_id;
+                   $plan28->plan=$user_id;
+                   $plan28->number_of_week=$j;
+
+                   $plan25->save();
+                   $plan26->save();
+                   $plan27->save();
+                   $plan28->save();
+
+                   $course3=Course::where('muscle','leg')->where('level',"beginner")->first();
+                   $course_id3=$course3->id;
+                   $ec=DB::table('course_exercise')->where('course_id',$course_id3)->inRandomOrder()->limit(4)->get();
+
+                   $plan29 = new Plan();
+                   $plan29->exercise_id=$ec[0]->exercise_id;
+                   $plan29->time=$ec[0]->time;
+                   $plan29->repetition=$ec[0]->repetition;
+
+
+                   $plan30 = new Plan();
+                   $plan30->exercise_id=$ec[1]->exercise_id;
+                   $plan30->time=$ec[1]->time;
+                   $plan30->repetition=$ec[1]->repetition;
+
+                   $plan31 = new Plan();
+                   $plan31->exercise_id=$ec[2]->exercise_id;
+                   $plan31->time=$ec[2]->time;
+                   $plan31->repetition=$ec[2]->repetition;
+
+                   $plan32 = new Plan();
+                   $plan32->exercise_id=$ec[3]->exercise_id;
+                   $plan32->time=$ec[3]->time;
+                   $plan32->repetition=$ec[3]->repetition;
+
+                   $plan29->user_id=$user_id;
+                   $plan29->plan=$user_id;
+                   $plan29->number_of_week=$j;
+                   $plan30->user_id=$user_id;
+                   $plan30->plan=$user_id;
+                   $plan30->number_of_week=$j;
+                   $plan31->user_id=$user_id;
+                   $plan31->plan=$user_id;
+                   $plan31->number_of_week=$j;
+                   $plan32->user_id=$user_id;
+                   $plan32->plan=$user_id;
+                   $plan32->number_of_week=$j;
+
+                   $plan29->save();
+                   $plan30->save();
+                   $plan31->save();
+                   $plan32->save();
+
+                   $course4=Course::where('muscle','chest')->where('level',"beginner")->first();
+                   $course_id4=$course4->id;
+                   $ec=DB::table('course_exercise')->where('course_id',$course_id4)->inRandomOrder()->limit(4)->get();
+
+                   $plan33 = new Plan();
+                   $plan33->exercise_id=$ec[0]->exercise_id;
+                   $plan33->time=$ec[0]->time;
+                   $plan33->repetition=$ec[0]->repetition;
+
+
+                   $plan34 = new Plan();
+                   $plan34->exercise_id=$ec[1]->exercise_id;
+                   $plan34->time=$ec[1]->time;
+                   $plan34->repetition=$ec[1]->repetition;
+
+                   $plan35 = new Plan();
+                   $plan35->exercise_id=$ec[2]->exercise_id;
+                   $plan35->time=$ec[2]->time;
+                   $plan35->repetition=$ec[2]->repetition;
+
+                   $plan36 = new Plan();
+                   $plan36->exercise_id=$ec[3]->exercise_id;
+                   $plan36->time=$ec[3]->time;
+                   $plan36->repetition=$ec[3]->repetition;
+
+                   $plan33->user_id=$user_id;
+                   $plan33->plan=$user_id;
+                   $plan33->number_of_week=$j;
+                   $plan34->user_id=$user_id;
+                   $plan34->plan=$user_id;
+                   $plan34->number_of_week=$j;
+                   $plan35->user_id=$user_id;
+                   $plan35->plan=$user_id;
+                   $plan35->number_of_week=$j;
+                   $plan36->user_id=$user_id;
+                   $plan36->plan=$user_id;
+                   $plan36->number_of_week=$j;
+
+                   $plan33->save();
+                   $plan34->save();
+                   $plan35->save();
+                   $plan36->save();
+
+                   $course5=Course::where('muscle','shoulder and back')->where('level',"beginner")->first();
+                   $course_id5=$course5->id;
+                   $ec=DB::table('course_exercise')->where('course_id',$course_id5)->inRandomOrder()->limit(4)->get();
+
+                   $plan37 = new Plan();
+                   $plan37->exercise_id=$ec[0]->exercise_id;
+                   $plan37->time=$ec[0]->time;
+                   $plan37->repetition=$ec[0]->repetition;
+
+
+                   $plan38 = new Plan();
+                   $plan38->exercise_id=$ec[1]->exercise_id;
+                   $plan38->time=$ec[1]->time;
+                   $plan38->repetition=$ec[1]->repetition;
+
+                   $plan39 = new Plan();
+                   $plan39->exercise_id=$ec[2]->exercise_id;
+                   $plan39->time=$ec[2]->time;
+                   $plan39->repetition=$ec[2]->repetition;
+
+                   $plan40 = new Plan();
+                   $plan40->exercise_id=$ec[3]->exercise_id;
+                   $plan40->time=$ec[3]->time;
+                   $plan40->repetition=$ec[3]->repetition;
+
+                   $plan37->user_id=$user_id;
+                   $plan37->plan=$user_id;
+                   $plan37->number_of_week=$j;
+                   $plan38->user_id=$user_id;
+                   $plan38->plan=$user_id;
+                   $plan38->number_of_week=$j;
+                   $plan39->user_id=$user_id;
+                   $plan39->plan=$user_id;
+                   $plan39->number_of_week=$j;
+                   $plan40->user_id=$user_id;
+                   $plan40->plan=$user_id;
+                   $plan40->number_of_week=$j;
+
+                   $plan37->save();
+                   $plan38->save();
+                   $plan39->save();
+                   $plan40->save();
                 }
 
         }
