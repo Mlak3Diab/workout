@@ -194,7 +194,7 @@ class  AuthController extends Controller
 
 
       if ($user->email_verified_at == null) {
-          return response()->json(['message'=>'your email address bot verified']);
+          return response()->json(['message'=>'your email address not verified']);
       }
         if(auth()->guard('trainer')->attempt($request->only('email','password'))) {
             config(['auth.guards.api.provider' => 'trainer']);

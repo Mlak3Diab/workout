@@ -4,6 +4,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TrainerOperationController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\VerificationControllerTrainer;
 use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Http\Request;
 
@@ -38,8 +39,8 @@ Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPass
 Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);
 Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);
 
-Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::get('/email/resend', [VerificationControllerTrainer::class, 'resend'])->name('verification.resend');
+Route::get('/email/verify/{id}/{hash}', [VerificationControllerTrainer::class, 'verify'])->name('verification.verify');
 
 Route::group( ['prefix' => 'trainer','middleware' => [/*'verified',*/'auth:trainer-api','scopes:trainer'] ],function(){
     Route::post('logout',[AuthController::class, 'trainerLogout']);
