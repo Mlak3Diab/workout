@@ -407,9 +407,15 @@ class UserOperationController extends Controller
         $user_id=auth()->user()->id;
         $plan=Plan::where('user_id',$user_id)->first();
         $exercise_for_day_in_week=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->first();
+        $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->select('time')->first();
+        $repetition=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->select('repetition')->first();
         return response()->json([
             'message'=>'your exercises for every day in first week',
-            'exercise_for_day_in_week'=> $exercise_for_day_in_week,]);
+            'exercise_for_day_in_week'=> $exercise_for_day_in_week,
+            'time'=>$time,
+            'repetition'=>$repetition,
+
+        ]);
     }
 
 
