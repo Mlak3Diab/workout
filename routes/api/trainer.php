@@ -42,7 +42,12 @@ Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassw
 Route::get('/email/resend', [VerificationControllerTrainer::class, 'resend'])->name('verification.resend');
 Route::get('/email/verify/{id}/{hash}', [VerificationControllerTrainer::class, 'verify'])->name('verification.verify');
 
+<<<<<<< HEAD
 Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer'] ],function(){
+=======
+Route::group(['prefix' => 'trainer','middleware' => [/*'verified',*/'auth:trainer-api','scopes:trainer'] ],function(){
+
+>>>>>>> 0578e6f974f5bf8202895f7a0e735adb2b321450
     Route::post('logout',[AuthController::class, 'trainerLogout']);
     Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);
     Route::get('getinfo',[TrainerOperationController::class, 'getinfo']);
@@ -51,7 +56,10 @@ Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes
     Route::delete('deletearticle/{article_id}',[TrainerOperationController::class, 'deletearticle']);
     Route::post('editusername', [TrainerOperationController::class, 'editusername']);
     Route::get('getallexercises', [TrainerOperationController::class, 'getallexercises']);
+    Route::post('addChallenge', [TrainerOperationController::class, 'addChallenge']);
+    Route::get('getTranierChallenge', [TrainerOperationController::class, 'getTranierChallenge']);
+    Route::get('getChallengeData/{challenge_id}', [TrainerOperationController::class, 'getChallengeData']);
+    Route::get('deleteChallenge/{challenge_id}', [TrainerOperationController::class, 'deleteChallenge']);
 
 
 });
-

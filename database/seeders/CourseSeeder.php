@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Course;
 use App\Models\Exercise;
+use App\Models\CourseExercise;
 
 class CourseSeeder extends Seeder
 {
@@ -73,6 +74,17 @@ class CourseSeeder extends Seeder
         $courseAbsBeginner->exercises()->attach([$exercise16->id], ['time' => 30]);
 
 
+        $courseAbsBeginner->load('exercises');
+        $totalCalories1 = $courseAbsBeginner->exercises()->sum('calories');
+        $totalTime1 = $courseAbsBeginner->exercises()->sum('course_exercise.time');
+
+
+        $courseAbsBeginner->update([
+            'total_calories' => $totalCalories1,
+            'total_time' => $totalTime1
+        ]);
+
+
         // Course 2
         $courseChestBeginner = Course::create([
             'name' => 'chest begginer ',
@@ -112,6 +124,17 @@ class CourseSeeder extends Seeder
 
         $exercis11 = Exercise::where('id',22)->first();
         $courseChestBeginner->exercises()->attach([$exercis11->id], ['time' => 20]);
+
+        $courseChestBeginner->load('exercises');
+        $totalCalories2 = $courseChestBeginner->exercises()->sum('calories');
+        $totalTime2 = $courseChestBeginner->exercises()->sum('course_exercise.time');
+
+
+        $courseChestBeginner->update([
+            'total_calories' => $totalCalories2,
+            'total_time' => $totalTime2
+        ]);
+
 
 
         // Course 3
@@ -177,6 +200,17 @@ class CourseSeeder extends Seeder
 
         $exerci19 = Exercise::where('id',99)->first();
         $courseArmBeginner->exercises()->attach([$exerci19->id], ['time' => 30]);
+
+        $courseArmBeginner->load('exercises');
+        $totalCalories3 = $courseArmBeginner->exercises()->sum('calories');
+        $totalTime3 = $courseArmBeginner->exercises()->sum('course_exercise.time');
+
+
+        $courseArmBeginner->update([
+            'total_calories' => $totalCalories3,
+            'total_time' => $totalTime3
+        ]);
+
 
 
         // Course 4
@@ -255,6 +289,16 @@ class CourseSeeder extends Seeder
         $exerc23 = Exercise::where('id',73)->first();
         $courseLegBeginner->exercises()->attach([$exerc23->id], ['time' => 30]);
 
+        $courseLegBeginner->load('exercises');
+        $totalCalories4 = $courseLegBeginner->exercises()->sum('calories');
+        $totalTime4 = $courseLegBeginner->exercises()->sum('course_exercise.time');
+
+
+        $courseLegBeginner->update([
+            'total_calories' => $totalCalories4,
+            'total_time' => $totalTime4
+        ]);
+
 
         // Course 5
         $courseShoulderAndBackBeginner = Course::create([
@@ -313,6 +357,17 @@ class CourseSeeder extends Seeder
 
         $exer17 = Exercise::where('id',23)->first();
         $courseShoulderAndBackBeginner->exercises()->attach([$exer17->id], ['time' => 30]);
+
+        $courseShoulderAndBackBeginner->load('exercises');
+        $totalCalories5 = $courseShoulderAndBackBeginner->exercises()->sum('calories');
+        $totalTime5 = $courseShoulderAndBackBeginner->exercises()->sum('course_exercise.time');
+
+
+        $courseShoulderAndBackBeginner->update([
+            'total_calories' => $totalCalories5,
+            'total_time' => $totalTime5
+        ]);
+
 
 
         // Course 6
@@ -374,6 +429,16 @@ class CourseSeeder extends Seeder
         $exe1 = Exercise::where('id',95)->first();
         $courseabsIntermediate->exercises()->attach([$exe1->id], ['time' => 30]);
 
+        $courseabsIntermediate->load('exercises');
+        $totalCalories6 = $courseabsIntermediate->exercises()->sum('calories');
+        $totalTime6 = $courseabsIntermediate->exercises()->sum('course_exercise.time');
+
+
+        $courseabsIntermediate->update([
+            'total_calories' => $totalCalories6,
+            'total_time' => $totalTime6
+        ]);
+
 
         // Course 7
         $coursechestIntermediate = Course::create([
@@ -424,6 +489,17 @@ class CourseSeeder extends Seeder
 
         $ex14 = Exercise::where('id',22)->first();
         $coursechestIntermediate->exercises()->attach([$ex14->id], ['time' => 30]);
+
+        $coursechestIntermediate->load('exercises');
+        $totalCalories7 = $coursechestIntermediate->exercises()->sum('calories');
+        $totalTime7 = $coursechestIntermediate->exercises()->sum('course_exercise.time');
+
+
+        $coursechestIntermediate->update([
+            'total_calories' => $totalCalories7,
+            'total_time' => $totalTime7
+        ]);
+
 
 
         // Course 8
@@ -507,6 +583,17 @@ class CourseSeeder extends Seeder
 
         $e25 = Exercise::where('id',99)->first();
         $courseArmIntermediate->exercises()->attach([$e25->id], ['time' => 30]);
+
+        $courseArmIntermediate->load('exercises');
+        $totalCalories8 = $courseArmIntermediate->exercises()->sum('calories');
+        $totalTime8 = $courseArmIntermediate->exercises()->sum('course_exercise.time');
+
+
+        $courseArmIntermediate->update([
+            'total_calories' => $totalCalories8,
+            'total_time' => $totalTime8
+        ]);
+
 
 
         // Course 9
@@ -624,6 +711,17 @@ class CourseSeeder extends Seeder
         $ee36 = Exercise::where('id',51)->first();
         $courseLegIntermediate->exercises()->attach([$ee36->id], ['time' => 30]);
 
+        $courseLegIntermediate->load('exercises');
+        $totalCalories9 = $courseLegIntermediate->exercises()->sum('calories');
+        $totalTime9 = $courseLegIntermediate->exercises()->sum('course_exercise.time');
+
+
+        $courseLegIntermediate->update([
+            'total_calories' => $totalCalories9,
+            'total_time' => $totalTime9
+        ]);
+
+
 
         // Course 10
         $courseBackAndShoulderIntermediate = Course::create([
@@ -682,6 +780,17 @@ class CourseSeeder extends Seeder
 
         $eex17 = Exercise::where('id',84)->first();
         $courseBackAndShoulderIntermediate->exercises()->attach([$eex17->id], ['time' => 30]);
+
+        $courseBackAndShoulderIntermediate->load('exercises');
+        $totalCalories10 = $courseBackAndShoulderIntermediate->exercises()->sum('calories');
+        $totalTime10 = $courseBackAndShoulderIntermediate->exercises()->sum('course_exercise.time');
+
+
+        $courseBackAndShoulderIntermediate->update([
+            'total_calories' => $totalCalories10,
+            'total_time' => $totalTime10
+        ]);
+
 
 
         // Course 11
@@ -754,6 +863,17 @@ class CourseSeeder extends Seeder
         $eexe21 = Exercise::where('id',95)->first();
         $courseAbsAdvanced->exercises()->attach([$eexe21->id], ['time' => 30]);
 
+        $courseAbsAdvanced->load('exercises');
+        $totalCalories11 = $courseAbsAdvanced->exercises()->sum('calories');
+        $totalTime11 = $courseAbsAdvanced->exercises()->sum('course_exercise.time');
+
+
+        $courseAbsAdvanced->update([
+            'total_calories' => $totalCalories11,
+            'total_time' => $totalTime11
+        ]);
+
+
 
         // Course 12
         $courseChestAdvanced = Course::create([
@@ -809,6 +929,17 @@ class CourseSeeder extends Seeder
 
         $eexer16 = Exercise::where('id',22)->first();
         $courseChestAdvanced->exercises()->attach([$eexer16->id], ['time' => 30]);
+
+        $courseChestAdvanced->load('exercises');
+        $totalCalories12 = $courseChestAdvanced->exercises()->sum('calories');
+        $totalTime12 = $courseChestAdvanced->exercises()->sum('course_exercise.time');
+
+
+        $courseChestAdvanced->update([
+            'total_calories' => $totalCalories12,
+            'total_time' => $totalTime12
+        ]);
+
 
 
         // Course 13
@@ -901,6 +1032,16 @@ class CourseSeeder extends Seeder
 
         $eexerc28 = Exercise::where('id',99)->first();
         $courseArmAdvanced->exercises()->attach([$eexerc28->id], ['time' => 30]);
+
+        $courseArmAdvanced->load('exercises');
+        $totalCalories13 = $courseArmAdvanced->exercises()->sum('calories');
+        $totalTime13 = $courseArmAdvanced->exercises()->sum('course_exercise.time');
+
+
+        $courseArmAdvanced->update([
+            'total_calories' => $totalCalories13,
+            'total_time' => $totalTime13
+        ]);
 
 
         // Course 14
@@ -1039,6 +1180,16 @@ class CourseSeeder extends Seeder
         $eexerci43 = Exercise::where('id',19)->first();
         $courseLegAdvanced->exercises()->attach([$eexerci43->id], ['time' => 30]);
 
+        $courseLegAdvanced->load('exercises');
+        $totalCalories14 = $courseLegAdvanced->exercises()->sum('calories');
+        $totalTime14 = $courseLegAdvanced->exercises()->sum('course_exercise.time');
+
+
+        $courseLegAdvanced->update([
+            'total_calories' => $totalCalories14,
+            'total_time' => $totalTime14
+        ]);
+
 
         // Course 15
         $courseBackAndShoulderAdvanced = Course::create([
@@ -1097,6 +1248,16 @@ class CourseSeeder extends Seeder
 
         $eexercis17 = Exercise::where('id',84)->first();
         $courseBackAndShoulderAdvanced->exercises()->attach([$eexercis17->id], ['time' => 30]);
+
+        $courseBackAndShoulderAdvanced->load('exercises');
+        $totalCalories15 = $courseBackAndShoulderAdvanced->exercises()->sum('calories');
+        $totalTime15 = $courseBackAndShoulderAdvanced->exercises()->sum('course_exercise.time');
+
+
+        $courseBackAndShoulderAdvanced->update([
+            'total_calories' => $totalCalories15,
+            'total_time' => $totalTime15
+        ]);
 
 
 

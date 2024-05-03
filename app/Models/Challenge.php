@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Challenge extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'image',
         'level',
         'total_time',
         'total_calories',
@@ -23,7 +23,10 @@ class Course extends Model
         return $this->belongsToMany(Exercise::class);
     }
 
-
+    public function Trainer()
+    {
+        return $this->belongsTo(Trainer::class);
+    }
 
 
 }

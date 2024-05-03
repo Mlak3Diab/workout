@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('challenges', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->integer('trainer_id');
+            $table->string('image')->nullable();
             $table->integer('total_calories')->nullable();
             $table->integer('total_time')->nullable();
             $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('challenges');
     }
 };

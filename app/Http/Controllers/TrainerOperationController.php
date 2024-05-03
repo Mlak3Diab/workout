@@ -9,10 +9,12 @@ use App\Models\Muscle;
 use App\Models\Plan;
 use App\Models\Trainer;
 use App\Models\User;
+use App\Models\Challenge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Integer;
+use Illuminate\Support\Facades\Validator;
 
 class TrainerOperationController extends Controller
 {
@@ -37,6 +39,8 @@ class TrainerOperationController extends Controller
             return response()->json(['error' => 'No image uploaded'], 400);
         }
     }
+
+
     public function getinfo(Request $request){
         $trainer_id=auth()->user()->id;
         $trainer=Trainer::where('id',$trainer_id)->first();
@@ -45,6 +49,8 @@ class TrainerOperationController extends Controller
             'data'=>$trainer,
         ]);
     }
+
+
     //add article -POST
      public function addarticle(Request $request){
         $trainer_id=auth()->user()->id;
@@ -61,6 +67,8 @@ class TrainerOperationController extends Controller
         $article->save();
         return response()->json(['message'=>'your article added successfully']);
     }
+
+
     //get all article for trainer _GET
     public function getarticle(){
         $trainer_id=auth()->user()->id;
@@ -70,6 +78,8 @@ class TrainerOperationController extends Controller
             'areticles'=>$articles
         ]);
     }
+
+
     //delet article _DELETE
     public function deletearticle($article_id){
         $trainer_id=auth()->user()->id;
@@ -86,7 +96,10 @@ class TrainerOperationController extends Controller
         {
             return response()->json([
                 'message'=>'unauthorized',
-            ]);}}
+            ]);
+        }
+    }
+
 
     //edit username _POST
     public function editusername(Request $request){
@@ -99,6 +112,8 @@ class TrainerOperationController extends Controller
             'user' => $trainer,
         ]);
     }
+
+
     //get all exercises GET
     public function getallexercises(){
         $exercises=Exercise::all();
@@ -106,6 +121,100 @@ class TrainerOperationController extends Controller
             'data'=>$exercises,
         ]);
     }
+
+    // add chanllenge
+    public function addChallenge(Request $request){
+
+        $trainer_id=auth()->user()->id;
+        $trainer=Trainer::where('id',$trainer_id)->first();
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'nullable|string',
+            'total_calories' => 'nullable|integer',
+            'total_time' => 'nullable|integer',
+            'muscle' => 'required|in:abs,chest,arm,leg,shoulder and back',
+            'level' => 'required|in:beginner,intermediate,advanced',
+            'exercises' => 'array|required',
+            'exercises.*.id' => 'exists:exercises,id',
+            'exercises.*.time' => 'nullable|integer',
+            'exercises.*.repetition' => 'nullable|integer',
+            'exercises.*.week' => 'required|integer|in:1,2,3,4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        // Create the challenge
+        $challenge = new Challenge();
+        $challenge->fill($request->except('exercises'));
+        $challenge->update(['trainer_id' => $trainer_id]);
+        $challenge->save();
+
+        // Attach exercises
+        foreach ($request->input('exercises') as $exercise) {
+            $time = $exercise['time'] ?? 30;
+            $week = $exercise['week'] ?? null;
+            $challenge->exercises()->attach($exercise['id'], [
+                'time' => $time,
+                'repetition' => $exercise['repetition'] ?? null,
+                'week' => $week,
+            ]);
+        }
+
+
+        $challenge->load('exercises');
+        $totalCalories = $challenge->exercises()->sum('calories');
+        $totalTime = $challenge->exercises()->sum('challenge_exercise.time');
+
+
+        $challenge->update([
+            'total_calories' => $totalCalories,
+            'total_time' => $totalTime
+        ]);
+
+        return response()->json([
+            'message' => 'Challenge created successfully'
+        ], 201);
+
+    }
+
+
+    public function getTranierChallenge(){
+        $trainer_id=auth()->user()->id;
+        $challenges = Challenge::where('trainer_id',$trainer_id)->get();
+
+        return response()->json([
+            'data' => $challenges,
+        ]);
+    }
+
+    public function getChallengeData($challenge_id){
+        $challenge = Challenge::where('id',$challenge_id)->first();
+        $exercises = $challenge->exercises()->get();
+
+        return response()->json([
+            'data' => $exercises,
+        ]);
+    }
+
+
+    public function deleteChallenge($challengeId)
+    {
+        // Retrieve the challenge with the given ID
+        $challenge = Challenge::findOrFail($challengeId);
+
+        // Delete all associated exercises
+        $challenge->exercises()->detach();
+
+        // Delete the challenge itself
+        $challenge->delete();
+
+        return response()->json([
+            'message' => 'Challenge deleted successfully'
+        ]);
+    }
+
 
 
 }

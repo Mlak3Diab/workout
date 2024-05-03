@@ -6,14 +6,15 @@ use App\Models\article;
 use App\Models\Exercise;
 use App\Models\Muscle;
 use App\Models\Plan;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
 use App\Models\Course;
+use App\Models\Challenge;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -379,6 +380,41 @@ class UserOperationController extends Controller
             'data' => $exercises,
         ]);
 
+    }
+
+    public function getAllChallenge(){
+
+        $challenges = Challenge::all();
+        return response()->json([
+            'data' => $challenges,
+        ]);
+    }
+
+    public function getChallengeExercises($challenge_id){
+
+        $challenge = Challenge::with('exercises')->findOrFail($challenge_id);
+
+        return response()->json([
+            'data' => $challenge->exercises
+        ]);
+    }
+
+    public function getExercisesForChallengeByWeek($challengeId, $week)
+    {
+        // Validate week input
+        if (!in_array($week, [1, 2, 3, 4])) {
+            return response()->json(['error' => 'Invalid week. Week must be 1, 2, 3, or 4.'], 400);
+        }
+
+        $challenge = Challenge::findOrFail($challengeId);
+
+        $exercises = $challenge->exercises()
+            ->wherePivot('week', $week)
+            ->get();
+
+        return response()->json([
+            'data' => $exercises
+        ]);
     }
 
 
