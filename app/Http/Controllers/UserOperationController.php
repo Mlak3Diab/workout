@@ -164,40 +164,14 @@ class UserOperationController extends Controller
     }
     protected function makeplan(Request $request){
         $user_id=auth()->user()->id;
-        $abs=$request->name1;
-        $chest=$request->name2;
-        $arm=$request->name3;
-        $leg=$request->name4;
-        $shoulderandback=$request->name5;
-        $Fullbody=$request->name6;
-        $array=[
-            '1'=>$abs,
-            '2'=>$chest,
-            '3'=>$arm,
-            '4'=>$leg,
-            '5'=>$shoulderandback,
-            '6'=>$Fullbody
-        ];
-        $loop=0;
-        if($array[1]!=null)
-            $loop+=1;
-        if($array[2]!=null)
-            $loop+=1;
-        if($array[3]!=null)
-            $loop+=1;
-        if($array[4]!=null)
-            $loop+=1;
-        if($array[5]!=null)
-            $loop+=1;
-        if($array[6]!=null)
-            $loop+=1;
+        $array= $request->all();
         $plan=new Plan();
         $plan->user_id=$user_id;
         $plan->save();
         for($j = 1 ; $j<=4;$j++ ){
-           for($i = 1; $i<=$loop;$i++ ){
-                if( $request->name1=='abs'){
-                    $course=Course::where('muscle',$request->name1)->where('level',"beginner")->first();
+           for($i = 1; $i<=sizeof($array);$i++ ){
+                if( $array[$i]=='abs'){
+                    $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                     $course_id=$course->id;
                     $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
                     $plan=Plan::find($plan->id);
@@ -211,10 +185,10 @@ class UserOperationController extends Controller
                     $plan->exercises()->attach($exercise3->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
                     $plan->exercises()->attach($exercise4->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
-                }
+              }
 
-                else if($request->name2=='chest'){
-                    $course=Course::where('muscle',$request->name2)->where('level',"beginner")->first();
+                 if($array[$i]=='chest'){
+                    $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                     $course_id=$course->id;
                     $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
                     $plan=Plan::find($plan->id);
@@ -230,8 +204,9 @@ class UserOperationController extends Controller
 
 
                 }
-           else  if($request->name3=='arm'){
-               $course=Course::where('muscle',$request->name2)->where('level',"beginner")->first();
+
+             if($array[$i]=='arm'){
+               $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                $course_id=$course->id;
                $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
                $plan=Plan::find($plan->id);
@@ -246,8 +221,8 @@ class UserOperationController extends Controller
                $plan->exercises()->attach($exercise12->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
            }//
-               else if($request->name4=='leg'){
-                   $course=Course::where('muscle',$request->name2)->where('level',"beginner")->first();
+                if($array[$i]=='leg'){
+                   $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                    $course_id=$course->id;
                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
                    $plan=Plan::find($plan->id);
@@ -262,8 +237,8 @@ class UserOperationController extends Controller
                    $plan->exercises()->attach($exercise16->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
                }//
-               else if($request->name5=='shoulder and back'){
-                   $course=Course::where('muscle',$request->name2)->where('level',"beginner")->first();
+                if($array[$i]=='shoulder and back'){
+                   $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                    $course_id=$course->id;
                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
                    $plan=Plan::find($plan->id);
@@ -279,7 +254,7 @@ class UserOperationController extends Controller
 
                }
                //full body
-               else if( $request->name6=='Full body'){
+                if( $array[$i]=='Full body'){
                    //abs
                    $course=Course::where('muscle','abs')->where('level',"beginner")->first();
                    $course_id=$course->id;
@@ -432,7 +407,6 @@ class UserOperationController extends Controller
         $user_id=auth()->user()->id;
         $plan=Plan::where('user_id',$user_id)->first();
         $exercise_for_day_in_week=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->first();
-
         return response()->json([
             'message'=>'your exercises for every day in first week',
             'exercise_for_day_in_week'=> $exercise_for_day_in_week,]);
