@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('plan_exercise_pivot', function (Blueprint $table) {
+        Schema::create('exercise_plan', function (Blueprint $table) {
             $table->id();
+            $table->integer('number_of_week');
             $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
             $table->foreignId('exercise_id')->constrained('exercises')->cascadeOnDelete();
             $table->integer('time')->nullable();
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_exercise_pivot');
+        Schema::dropIfExists('exercise_plan');
     }
 };

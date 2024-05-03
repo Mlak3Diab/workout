@@ -9,14 +9,15 @@ class Plan extends Model
 {
     use HasFactory;
     protected $fillable=[
-       'number_of_week'
+
     ];
     public function user(){
         return $this->belongsTo(User::class);
     }
 
-    public function exercises(){
-        return $this->hasMany(Exercise::class);
+    public function exercises()
+    {
+        return $this->belongsToMany(Exercise::class);
     }
 
 }

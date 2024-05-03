@@ -63,7 +63,7 @@ class  AuthController extends Controller
 
 
       if ($user->email_verified_at == null) {
-          return response()->json(['message'=>'your email address not verified']);
+          return response()->json(['message'=>'your email address not verified',],403);
       }
      if(auth()->guard('user')->attempt($request->only('email','password'))) {
          config(['auth.guards.api.provider' => 'user']);
@@ -194,7 +194,7 @@ class  AuthController extends Controller
 
 
       if ($user->email_verified_at == null) {
-          return response()->json(['message'=>'your email address not verified']);
+          return response()->json(['message'=>'your email address not verified'],403);
       }
         if(auth()->guard('trainer')->attempt($request->only('email','password'))) {
             config(['auth.guards.api.provider' => 'trainer']);

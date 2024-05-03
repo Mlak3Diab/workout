@@ -40,7 +40,7 @@ Route::post('user/password/reset', [AuthController::class ,'userResetPassword'])
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 
-Route::group(['prefix' => 'user', 'middleware' => [/*'verified', */'auth:user-api', 'scopes:user']], function () {
+Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user']], function () {
 
         Route::get('logout', [AuthController::class, 'userLogout']);
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);

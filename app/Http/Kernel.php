@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'scopes' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
 
 
+
     ];
 }

@@ -15,14 +15,12 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->integer('number_of_week');
-            $table->integer('plan');
-
+           // $table->integer('number_of_week');
+            //$table->integer('plan');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('exercise_id')->constrained('exercises')->cascadeOnDelete();
-            $table->integer('time')->nullable();
-            $table->integer('repetition')->nullable();
-
+            //$table->foreignId('exercise_id')->constrained('exercises')->cascadeOnDelete();
+           // $table->integer('time')->nullable();
+            //$table->integer('repetition')->nullable();
             $table->timestamps();
         });
     }
