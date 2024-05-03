@@ -57,8 +57,8 @@ Route::group(['prefix' => 'user', 'middleware' => [/*'verified', */'auth:user-ap
         Route::get('getplan',[UserOperationController::class, 'getplan']);
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);
         Route::get('getAllExercisesForCourse',[UserOperationController::class, 'getAllExercisesForCourse']);
-        Route::get('getAllChallenge', [TrainerOperationController::class, 'getAllChallenge']);
-        Route::get('getChallengeExercises/{challenge_id}', [TrainerOperationController::class, 'getChallengeExercises']);
-
+        Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);
+        Route::get('getChallengeExercises/{challenge_id}', [UserOperationController::class, 'getChallengeExercises']);
+        Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);
 
     });

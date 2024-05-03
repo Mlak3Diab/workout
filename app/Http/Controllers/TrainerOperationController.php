@@ -138,6 +138,7 @@ class TrainerOperationController extends Controller
             'exercises.*.id' => 'exists:exercises,id',
             'exercises.*.time' => 'nullable|integer',
             'exercises.*.repetition' => 'nullable|integer',
+            'exercises.*.week' => 'required|integer|in:1,2,3,4',
         ]);
 
         if ($validator->fails()) {
@@ -153,9 +154,11 @@ class TrainerOperationController extends Controller
         // Attach exercises
         foreach ($request->input('exercises') as $exercise) {
             $time = $exercise['time'] ?? 30;
+            $week = $exercise['week'] ?? null;
             $challenge->exercises()->attach($exercise['id'], [
                 'time' => $time,
                 'repetition' => $exercise['repetition'] ?? null,
+                'week' => $week,
             ]);
         }
 
@@ -174,6 +177,42 @@ class TrainerOperationController extends Controller
             'message' => 'Challenge created successfully'
         ], 201);
 
+    }
+
+
+    public function getTranierChallenge(){
+        $trainer_id=auth()->user()->id;
+        $challenges = Challenge::where('trainer_id',$trainer_id)->get();
+
+        return response()->json([
+            'data' => $challenges,
+        ]);
+    }
+
+    public function getChallengeData($challenge_id){
+        $challenge = Challenge::where('id',$challenge_id)->first();
+        $exercises = $challenge->exercises()->get();
+
+        return response()->json([
+            'data' => $exercises,
+        ]);
+    }
+
+
+    public function deleteChallenge($challengeId)
+    {
+        // Retrieve the challenge with the given ID
+        $challenge = Challenge::findOrFail($challengeId);
+
+        // Delete all associated exercises
+        $challenge->exercises()->detach();
+
+        // Delete the challenge itself
+        $challenge->delete();
+
+        return response()->json([
+            'message' => 'Challenge deleted successfully'
+        ]);
     }
 
 

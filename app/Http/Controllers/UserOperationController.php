@@ -677,6 +677,24 @@ class UserOperationController extends Controller
         ]);
     }
 
+    public function getExercisesForChallengeByWeek($challengeId, $week)
+    {
+        // Validate week input
+        if (!in_array($week, [1, 2, 3, 4])) {
+            return response()->json(['error' => 'Invalid week. Week must be 1, 2, 3, or 4.'], 400);
+        }
+
+        $challenge = Challenge::findOrFail($challengeId);
+
+        $exercises = $challenge->exercises()
+            ->wherePivot('week', $week)
+            ->get();
+
+        return response()->json([
+            'data' => $exercises
+        ]);
+    }
+
 
 
 }
