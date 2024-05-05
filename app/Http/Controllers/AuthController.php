@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendCodeResetPassword;
+use App\Mail\sendcodeverificationemail;
+use App\Models\email_verification_code;
 use App\Models\ResetCodePassword;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Auth\Events\verified;
-use Illuminate\Auth\Events\Registered;
+
 
 
 class  AuthController extends Controller
@@ -45,9 +43,18 @@ class  AuthController extends Controller
         'weight_value' => $request->input('weight'),
         'user_id' => $user->id,
         ]);
-     $user->sendEmailVerificationNotification();
-        return response()->json([
-          'messsage' =>'User registered successfully. Please verify your email. ',
+      //generate random code
+      $data['code']= mt_rand(10000 , 99999);
+      $data['email']=$user->email;
+
+      // create a new code
+      $codeData= email_verification_code::query()->create($data);
+
+      //send email to user
+      Mail::to($user->email)->send(new sendcodeverificationemail($codeData['code']));
+
+      return response()->json([
+          'messsage' =>'User registered successfully. Please verify your email by code ',
           'user'=>$user,
           'access_Token' => $accesstoken,
         ]);
@@ -143,7 +150,7 @@ class  AuthController extends Controller
             ],422);
         }
         //find user email
-        $user = \App\Models\User::query()->firstWhere('email', $passwordReset['email']);
+        $user = User::query()->firstWhere('email', $passwordReset['email']);
 
         //update user password
         $input['password'] = bcrypt($input['password']);
@@ -156,6 +163,32 @@ class  AuthController extends Controller
         return response()->json(['message'=> 'password has been successfully reset ']);
 
     }
+
+    public function userCheckCodeemailverification(Request $request){
+        $request->validate([
+            'code'=>'required|string|exists:email_verification_codes',
+        ]);
+        //find the code
+        $verifyemail= email_verification_code::query()->firstWhere('code',$request['code']);
+        $user = User::where('email', $verifyemail['email'])->first();
+
+
+        //check if it is not expired the is one hour
+        if($verifyemail['created_at'] > now()->addHour()){
+            $verifyemail->delete();
+            return response()->json([
+                'message' => trans('code.is.expire')
+            ],422);
+        }
+        else{
+            $user->email_verified_at=now();
+            $user->save();
+        return response()->json([
+            'code' => $verifyemail['code'],
+            'message' => trans('code.is.valid'),
+        ]);}
+    }
+
 //////////////////////////////////////
 /// for trainer web
   public function trainerRegister(Request $request)
@@ -177,7 +210,17 @@ class  AuthController extends Controller
 
         $trainer=Trainer::query()->create($input);
         $accesstoken= $trainer->createToken('MyApp',['trainer'])->accessToken;
-        $trainer->sendEmailVerificationNotification();
+
+        //generate random code
+        $data['code']= mt_rand(10000 , 99999);
+        $data['email']=$trainer->email;
+
+        // create a new code
+        $codeData= email_verification_code::query()->create($data);
+
+        //send email to user
+        Mail::to($trainer->email)->send(new sendcodeverificationemail($codeData['code']));
+
         return response()->json([
             'trainer'=>$trainer,
             'access_Token' => $accesstoken,
@@ -287,4 +330,28 @@ class  AuthController extends Controller
         return response()->json(['message'=> 'password has been successfully reset ']);
     }
 
+    public function trainerCheckCodeemailverification(Request $request){
+        $request->validate([
+            'code'=>'required|string|exists:email_verification_codes',
+        ]);
+        //find the code
+        $verifyemail= email_verification_code::query()->firstWhere('code',$request['code']);
+        $trainer = Trainer::where('email', $verifyemail['email'])->first();
+
+
+        //check if it is not expired the is one hour
+        if($verifyemail['created_at'] > now()->addHour()){
+            $verifyemail->delete();
+            return response()->json([
+                'message' => trans('code.is.expire')
+            ],422);
+        }
+        else{
+            $trainer->email_verified_at=now();
+            $trainer->save();
+            return response()->json([
+                'code' => $verifyemail['code'],
+                'message' => trans('code.is.valid'),
+            ]);}
+    }
 }

@@ -36,9 +36,7 @@ Route::post('user/login',[AuthController::class, 'userLogin']);
 Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);
 Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);
 Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);
-
-Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('user/CheckCodeemailverification', [AuthController::class,'userCheckCodeemailverification']);
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user']], function () {
 

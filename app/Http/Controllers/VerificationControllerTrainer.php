@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trainer;
-use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 
@@ -12,37 +11,37 @@ class VerificationControllerTrainer extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth:user-api')->only('resend');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        $this->middleware('auth:trainer-api')->only('resendt');
+        $this->middleware('signed')->only('verifyt');
+        $this->middleware('throttle:6,1')->only('verifyt', 'resendt');
     }
 
-    public function verify(Request $request) {
+    public function verifyt(Request $request) {
 
 
-        $user_id=$request->id;
-        $user=Trainer::findorfail($user_id);
-        if ($user->hasVerifiedEmail()) {
+        $trainer_id=$request->id;
+        $trainer=Trainer::findOrFail($trainer_id);
+        if ($trainer->hasVerifiedEmail()) {
             return response(['message' => 'Email already verified '], 200);
         }
-        if($user->markEmailAsVerified()){
+        if($trainer->markEmailAsVerified()){
             event(new Verified($request->user()));
         }
 
-        $user->update(['email_verified_at' => now()]);
+        $trainer->update(['email_verified_at' => now()]);
 
         return response()->json(['message' => 'Email verified successfully'], 200);
     }
 
-    public function resend(Request $request) {
-        $user_id=auth()->user()->id;
-        $user=Trainer::findorfail($user_id);
-        if ($user->hasVerifiedEmail()) {
+    public function resendt(Request $request) {
+        $trainer_id=auth()->user()->id;
+        $trainer=Trainer::findOrFail($trainer_id);
+        if ($trainer->hasVerifiedEmail()) {
             return response(["msg" => "Email already verified."], 400);
         }
 
-        $user->sendEmailVerificationNotification();
-        $user->update(['email_verified_at' => now()]);
+        $trainer->sendEmailVerificationNotification();
+        $trainer->update(['email_verified_at' => now()]);
         return response()->json(["msg" => "Email verification link sent on your email id"]);
 
     }

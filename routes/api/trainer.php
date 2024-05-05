@@ -38,11 +38,7 @@ Route::post('trainer/login',[AuthController::class, 'trainerLogin']);
 Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPassword']);
 Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);
 Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);
-
-Route::get('/email/resend', [VerificationControllerTrainer::class, 'resend'])->name('verification.resend');
-Route::get('/email/verify/{id}/{hash}', [VerificationControllerTrainer::class, 'verify'])->name('verification.verify');
-
-
+Route::post('trainer/CheckCodeemailverification', [AuthController::class,'trainerCheckCodeemailverification']);
 Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer'] ],function(){
 
 

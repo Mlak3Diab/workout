@@ -84,6 +84,7 @@ return [
         'trainers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Trainer::class,
+            'verify' => true,
         ],
 
         // 'users' => [

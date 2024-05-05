@@ -2,33 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 use Illuminate\Notifications\Notifiable;
 
-class Trainer extends Model  implements Authenticatable , MustVerifyEmail
+class Trainer extends Model  implements Authenticatable
 {
     use HasFactory ,HasApiTokens ,AuthenticableTrait, Notifiable;
-    public function hasVerifiedEmail(){
-        return $this->email_verified_at !== null;
-    }
-    public function markEmailAsVerified(){
-
-        $this->forceFill([
-            'email_verified_at' => $this->freshTimestamp(),
-        ])->save();
-    }
-    public function sendEmailVerificationNotification(){
-        $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
-    }
-    public function getEmailForVerification(){
-        return $this->email;
-    }
-
 
     protected $fillable = [
         'username',
@@ -55,9 +41,5 @@ class Trainer extends Model  implements Authenticatable , MustVerifyEmail
         'password',
         'remember_token',
     ];
-    protected $casts = [
 
-        'email_verified_at' => 'datetime',
-
-    ];
 }

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +10,7 @@ use Laravel\Passport\HasApiTokens;
 
 
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'total_time_practice',
         'total_calorie',
         'image',
+        'email_verified_at'
     ];
     public function Plan(){
         return $this->hasOne(Plan::class);
@@ -50,7 +51,5 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
 }

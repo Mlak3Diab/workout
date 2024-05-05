@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
-    //use VerifiesEmails;
+
     public function __construct()
     {
         $this->middleware('auth:user-api')->only('resend');
@@ -17,11 +17,11 @@ class VerificationController extends Controller
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 
-    public function verify(Request $request) {
+    public function verifyu(Request $request) {
 
 
         $user_id=$request->id;
-       $user=User::findorfail($user_id);
+       $user=User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
             return response(['message' => 'Email already verified '], 200);
         }
@@ -36,11 +36,10 @@ class VerificationController extends Controller
 
     public function resend(Request $request) {
         $user_id=auth()->user()->id;
-        $user=User::findorfail($user_id);
+        $user=User::findOrFail($user_id);
         if ($user->hasVerifiedEmail()) {
             return response(["msg" => "Email already verified."], 400);
         }
-
         $user->sendEmailVerificationNotification();
         $user->update(['email_verified_at' => now()]);
         return response()->json(["msg" => "Email verification link sent on your email id"]);
