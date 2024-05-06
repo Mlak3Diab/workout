@@ -75,7 +75,7 @@ class TrainerOperationController extends Controller
         $articles=Article::where('trainer_id',$trainer_id)->get();
         return response()->json([
             'message'=>'your articles',
-            'areticles'=>$articles
+            'articles'=>$articles
         ]);
     }
 
@@ -126,7 +126,6 @@ class TrainerOperationController extends Controller
     public function addChallenge(Request $request){
 
         $trainer_id=auth()->user()->id;
-        $trainer=Trainer::where('id',$trainer_id)->first();
 
         $validator = Validator::make($request->all(), [
             'image' => 'nullable|string',
@@ -148,7 +147,7 @@ class TrainerOperationController extends Controller
         // Create the challenge
         $challenge = new Challenge();
         $challenge->fill($request->except('exercises'));
-        $challenge->update(['trainer_id' => $trainer_id]);
+        $challenge->trainer_id=$trainer_id;
         $challenge->save();
 
         // Attach exercises

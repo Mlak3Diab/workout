@@ -40,24 +40,26 @@ Route::post('user/CheckCodeemailverification', [AuthController::class,'userCheck
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user']], function () {
 
-        Route::get('logout', [AuthController::class, 'userLogout']);
-        Route::get('getBMI', [UserOperationController::class, 'GetBMI']);
-        Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);
-        Route::get('getinfo', [UserOperationController::class, 'getinfo']);
-        Route::post('add_weight', [UserOperationController::class, 'addWeight']);
-        Route::get('getweights', [UserOperationController::class, 'getallweights']);
-        Route::post('editusername', [UserOperationController::class, 'editusername']);
-        Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);
+        Route::get('logout', [AuthController::class, 'userLogout']);  //postman
+        Route::get('getBMI', [UserOperationController::class, 'GetBMI']);   //postman
+        Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);   //postman
+        Route::get('getinfo', [UserOperationController::class, 'getinfo']);   //postman
+        Route::post('add_weight', [UserOperationController::class, 'addWeight']);   //postman
+        Route::get('getweights', [UserOperationController::class, 'getallweights']);   //postman
+        Route::post('editusername', [UserOperationController::class, 'editusername']);   //postman
+        Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);   //postman
         Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);
         Route::get('getallarticles',[UserOperationController::class, 'getallarticles']);
         Route::get('getinfoonearticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);
-        Route::post('makeplan',[UserOperationController::class, 'makeplan']);
+        Route::post('makeplan',[UserOperationController::class, 'makeplan']);   //postman
         Route::get('getplan',[UserOperationController::class, 'getplan']);
-        Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);
-        Route::get('getAllExercisesForCourse',[UserOperationController::class, 'getAllExercisesForCourse']);
-        Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);
+        Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);   //postman
+        Route::get('getAllExercisesForCourse/{course_id}',[UserOperationController::class, 'getAllExercisesForCourse']);   //postman
+        Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);   //postman
         Route::get('getChallengeExercises/{challenge_id}', [UserOperationController::class, 'getChallengeExercises']);
-        Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);
-        Route::get('getexercisesfordayinweek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);
-        Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);
+        Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);   //postman
+        Route::get('getexercisesfordayinweek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
+        Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
+
+
     });

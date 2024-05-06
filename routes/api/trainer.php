@@ -43,17 +43,17 @@ Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes
 
 
     Route::post('logout',[AuthController::class, 'trainerLogout']);
-    Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);
-    Route::get('getinfo',[TrainerOperationController::class, 'getinfo']);
-    Route::post('addarticle',[TrainerOperationController::class, 'addarticle']);
-    Route::get('getarticle',[TrainerOperationController::class, 'getarticle']);
-    Route::delete('deletearticle/{article_id}',[TrainerOperationController::class, 'deletearticle']);
+    Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);   //postman
+    Route::get('getinfo',[TrainerOperationController::class, 'getinfo']);   //postman
+    Route::post('addarticle',[TrainerOperationController::class, 'addarticle']);   //postman
+    Route::get('getarticle',[TrainerOperationController::class, 'getarticle']);   //postman
+    Route::delete('deletearticle/{article_id}',[TrainerOperationController::class, 'deletearticle']);   //postman
     Route::post('editusername', [TrainerOperationController::class, 'editusername']);
     Route::get('getallexercises', [TrainerOperationController::class, 'getallexercises']);
-    Route::post('addChallenge', [TrainerOperationController::class, 'addChallenge']);
-    Route::get('getTranierChallenge', [TrainerOperationController::class, 'getTranierChallenge']);
-    Route::get('getChallengeData/{challenge_id}', [TrainerOperationController::class, 'getChallengeData']);
-    Route::get('deleteChallenge/{challenge_id}', [TrainerOperationController::class, 'deleteChallenge']);
+    Route::post('addChallenge', [TrainerOperationController::class, 'addChallenge']);  //postman
+    Route::get('getTranierChallenge', [TrainerOperationController::class, 'getTranierChallenge']);   //postman
+    Route::get('getChallengeData/{challenge_id}', [TrainerOperationController::class, 'getChallengeData']);   //postman
+    Route::delete('deleteChallenge/{challenge_id}', [TrainerOperationController::class, 'deleteChallenge']);   //postman
 
 
 });

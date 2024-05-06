@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('challenges', function (Blueprint $table) {
             $table->id();
-            $table->integer('trainer_id');
+            $table->foreignId('trainer_id')->constrained('trainers')->cascadeOnDelete();
             $table->string('image')->nullable();
             $table->integer('total_calories')->nullable();
             $table->integer('total_time')->nullable();
