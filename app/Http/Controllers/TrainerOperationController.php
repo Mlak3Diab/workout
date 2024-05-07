@@ -10,6 +10,7 @@ use App\Models\Plan;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Challenge;
+use App\Models\Weight;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -215,5 +216,32 @@ class TrainerOperationController extends Controller
     }
 
 
+    public function getUserEnrolledChallengesByTrainer()
+    {
+        $trainerId=auth()->user()->id;
+
+     // Retrieve challenges created by the given trainer
+    $challenges = Challenge::where('trainer_id', $trainerId)->get();
+
+    // Initialize an empty collection to store enrolled users
+    $enrolledUsers = collect();
+
+    // Iterate through the challenges and retrieve users enrolled in each challenge
+    foreach ($challenges as $challenge) {
+
+        $users = $challenge->users()->get();
+        foreach ($users as $user) {
+            if (!$enrolledUsers->contains('id', $user->id)) {
+                $enrolledUsers->push($user);
+            }
+    }
+}
+
+
+        return response()->json([
+            'message' => 'the user enrolled in trainer challenge',
+            'data' => $enrolledUsers
+        ], 200);
+    }
 
 }

@@ -418,6 +418,34 @@ class UserOperationController extends Controller
         ]);
     }
 
+    public function enrollUser($challenge_id)
+    {
+        $user = auth()->user();
+
+        // Check if the challenge exists
+        $challenge = Challenge::find($challenge_id);
+
+        if (!$challenge) {
+            return response()->json([
+                'message' => 'Challenge not found'
+            ], 404);
+        }
+
+        // Check if the user is already enrolled in the challenge
+        if ($user->challenges()->where('challenge_id', $challenge->id)->exists()) {
+            return response()->json([
+                'message' => 'User is already enrolled in this challenge'
+            ], 400);
+        }
+
+        // Enroll the user in the challenge
+        $user->challenges()->attach($challenge);
+
+        return response()->json([
+            'message' => 'User enrolled in the challenge successfully.'
+        ], 200);
+
+    }
 
 
 }

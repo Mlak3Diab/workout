@@ -32,8 +32,13 @@ class User extends Authenticatable
         'image',
         'email_verified_at'
     ];
+
     public function Plan(){
         return $this->hasOne(Plan::class);
+    }
+
+    public function challenges(){
+        return $this->belongsToMany(Challenge::class);
     }
 
     /**

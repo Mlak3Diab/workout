@@ -60,6 +60,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);   //postman
         Route::get('getexercisesfordayinweek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
         Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
+        Route::get('enrollUser/{challenge_id}',[UserOperationController::class,'enrollUser']);   //postman
 
 
     });

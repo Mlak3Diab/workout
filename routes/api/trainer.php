@@ -54,6 +54,7 @@ Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes
     Route::get('getTranierChallenge', [TrainerOperationController::class, 'getTranierChallenge']);   //postman
     Route::get('getChallengeData/{challenge_id}', [TrainerOperationController::class, 'getChallengeData']);   //postman
     Route::delete('deleteChallenge/{challenge_id}', [TrainerOperationController::class, 'deleteChallenge']);   //postman
+    Route::get('getUserEnrolledChallengesByTrainer',[TrainerOperationController::class, 'getUserEnrolledChallengesByTrainer']);   //postman
 
 
 });
