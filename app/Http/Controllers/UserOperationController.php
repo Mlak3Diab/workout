@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\sendAgentslistandConfirmation;
+use App\Mail\sendcodeverificationemail;
 use App\Models\article;
 use App\Models\Exercise;
 use App\Models\Muscle;
 use App\Models\Plan;
+use App\Models\Product;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
@@ -15,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -71,25 +75,27 @@ class UserOperationController extends Controller
     //add picture -POST
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
-
-
+        $request->validate([
+            'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $request->validate([
-                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
-            // التحقق مما إذا كان هناك صورة قديمة، إذا كانت هناك، احذفها
-            if ($user->image) {
-                Storage::delete($user->image);
-            }
-                // تخزين الصورة الجديدة وتحديث المسار في قاعدة البيانات
-                $path = $image->store('image');
-                $user->image = $path;
-                $user->save();
+
+            $profile_image=time() . '.' .$image->getClientOriginalExtension();
+            $image->move(public_path('user_profile_images'),$profile_image);
+            $profile_image='user_profile_images/'.$profile_image;
+            $user->image=$profile_image;
+            $user->save();
             return response()->json(['message' => 'Profile picture updated successfully'], 200);
         } else {
             return response()->json(['error' => 'No image uploaded'], 400);
         }
+    }
+    public function deleteprofile(){
+        $user = auth()->user();
+        $user->image=null;
+        $user->save();
+        return response()->json(['message' => 'Profile picture deleted successfully'], 200);
     }
 
     //get info for user _GET
@@ -444,6 +450,36 @@ class UserOperationController extends Controller
         return response()->json([
             'message' => 'User enrolled in the challenge successfully.'
         ], 200);
+
+    }
+
+    public function getallproducts(){
+        $products=Product::all();
+        return response()->json([
+            'message'=>'products in our app',
+            'products'=>$products,
+        ]);
+    }
+    public function buyaproduct($product_id){
+        $user=auth()->user();
+        $product=Product::findOrFail($product_id);
+        if($user->points>=$product->price && $product->status=='unsold'){
+            $user->points=$user->points-$product->price;
+            $user->save();
+            $product->status='sold';
+            $product->save();
+            Mail::to($user->email)->send(new sendAgentslistandConfirmation());
+
+            return response()->json([
+                'message'=>'yes you did it ,Check your email',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message'=>'Oops!, You cant buy because you dont have enough money  ',
+            ]);
+        }
+
 
     }
 

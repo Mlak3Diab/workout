@@ -30,7 +30,8 @@ class User extends Authenticatable
         'total_time_practice',
         'total_calorie',
         'image',
-        'email_verified_at'
+        'email_verified_at',
+        'points',
     ];
 
     public function Plan(){

@@ -26,6 +26,8 @@ return new class extends Migration
             $table->double('total_time_practice')->nullable();
             $table->double('total_calorie')->nullable();
             $table->string('image')->nullable();
+            $table->integer('points')->nullable();
+            //$table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });

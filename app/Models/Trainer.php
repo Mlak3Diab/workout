@@ -25,6 +25,10 @@ class Trainer extends Model  implements Authenticatable
       'email_verified_at',
 
     ];
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
 
     public function articles()

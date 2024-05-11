@@ -64,14 +64,6 @@ class  AuthController extends Controller
           'email'=>'required',
           'password' => 'required',
          ]);
-    $user=User::where('email',$request->email)->first();
-      // Attempt to log in the user
-      // Check if user is verified
-
-
-      if ($user->email_verified_at == null) {
-          return response()->json(['message'=>'your email address not verified',],403);
-      }
      if(auth()->guard('user')->attempt($request->only('email','password'))) {
          config(['auth.guards.api.provider' => 'user']);
          $user = User::query()->select('users.*')->find(auth()->guard('user')->user()->id);
@@ -222,6 +214,7 @@ class  AuthController extends Controller
         Mail::to($trainer->email)->send(new sendcodeverificationemail($codeData['code']));
 
         return response()->json([
+            'message'=>'Trainer registered successfully. Please verify your email by code',
             'trainer'=>$trainer,
             'access_Token' => $accesstoken,
         ]);
@@ -231,14 +224,6 @@ class  AuthController extends Controller
             'email'=>'required|email',
             'password' => 'required',
         ]);
-      $user=Trainer::where('email',$request->email)->first();
-      // Attempt to log in the user
-      // Check if user is verified
-
-
-      if ($user->email_verified_at == null) {
-          return response()->json(['message'=>'your email address not verified'],403);
-      }
         if(auth()->guard('trainer')->attempt($request->only('email','password'))) {
             config(['auth.guards.api.provider' => 'trainer']);
             $trainer = Trainer::query()->select('trainers.*')->find(auth()->guard('trainer')->user()['id']);

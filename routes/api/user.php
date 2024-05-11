@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserOperationController;
-use App\Http\Controllers\VerifyEmailController;
 
 
 
@@ -31,18 +30,18 @@ use App\Http\Controllers\VerifyEmailController;
 */
 
 
-Route::post('user/register',[AuthController::class, 'userRegister']);
-Route::post('user/login',[AuthController::class, 'userLogin']);
-Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);
-Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);
-Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);
-Route::post('user/CheckCodeemailverification', [AuthController::class,'userCheckCodeemailverification']);
+Route::post('user/register',[AuthController::class, 'userRegister']);//postman
+Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);//postman
+Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);//postman
+Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);//postman
+Route::post('user/CheckCodeemailverification', [AuthController::class,'userCheckCodeemailverification']);//postman
 
-Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user']], function () {
-
+Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user','myverified']], function () {
+        Route::post('login',[AuthController::class, 'userLogin']);//postman
         Route::get('logout', [AuthController::class, 'userLogout']);  //postman
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);   //postman
         Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);   //postman
+        Route::get('deleteprofile',[UserOperationController::class,'deleteprofile']); //postman
         Route::get('getinfo', [UserOperationController::class, 'getinfo']);   //postman
         Route::post('add_weight', [UserOperationController::class, 'addWeight']);   //postman
         Route::get('getweights', [UserOperationController::class, 'getallweights']);   //postman
@@ -61,6 +60,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getexercisesfordayinweek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
         Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
         Route::get('enrollUser/{challenge_id}',[UserOperationController::class,'enrollUser']);   //postman
-
+        Route::get('getallproducts', [UserOperationController::class, 'getallproducts']);   //postman
+        Route::get('buyaproduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
 
     });

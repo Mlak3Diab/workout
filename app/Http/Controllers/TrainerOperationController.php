@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Muscle;
 use App\Models\Plan;
+use App\Models\Product;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Challenge;
@@ -21,25 +22,30 @@ class TrainerOperationController extends Controller
 {
     public function addProfilePicture(Request $request) {
         $trainer = auth()->user();
-
+        $request->validate([
+            'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $request->validate([
-                'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
-            // التحقق مما إذا كان هناك صورة قديمة، إذا كانت هناك، احذفها
-            if ($trainer->image) {
-                Storage::delete($trainer->image);
-            }
-            // تخزين الصورة الجديدة وتحديث المسار في قاعدة البيانات
-            $path = $image->store('image');
-            $trainer->image = $path;
-            $trainer->save();
+
+                $profile_image=time() . '.' .$image->getClientOriginalExtension();
+                $image->move(public_path('trainer_profile_images'),$profile_image);
+                $profile_image='trainer_profile_images/'.$profile_image;
+        $trainer->image=$profile_image;
+        $trainer->save();
             return response()->json(['message' => 'Profile picture updated successfully'], 200);
         } else {
             return response()->json(['error' => 'No image uploaded'], 400);
         }
     }
+    public function deleteprofile(){
+        $trainer = auth()->user();
+        $trainer->image=null;
+        $trainer->save();
+        return response()->json(['message' => 'Profile picture deleted successfully'], 200);
+    }
+
+
 
 
     public function getinfo(Request $request){
@@ -60,13 +66,23 @@ class TrainerOperationController extends Controller
             'body'=>'required|string',
             'image'=>'required|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        $article=new Article();
-        $article->title=$request->title;
-        $article->body=$request->body;
-        $article->image=$request->image;
-        $article->trainer_id=$trainer_id;
-        $article->save();
-        return response()->json(['message'=>'your article added successfully']);
+         $article=new Article();
+         if ($request->hasFile('image')) {
+             $image = $request->file('image');
+
+             $article_image = time() . '.' . $image->getClientOriginalExtension();
+             $image->move(public_path('article_images'), $article_image);
+             $article_image = 'article_images/' . $article_image;
+             $article->image = $article_image;
+             $article->title = $request->title;
+             $article->body = $request->body;
+             $article->trainer_id = $trainer_id;
+             $article->save();
+             return response()->json(['message' => 'your article added successfully']);
+         }
+         else{
+             return response()->json(['error' => 'No image uploaded'], 400);
+         }
     }
 
 
@@ -90,12 +106,8 @@ class TrainerOperationController extends Controller
         {
             $article->delete();
         return response()->json([
-            'message'=>'your article is delete',
-        ]);
-        }
-        else
-        {
-            return response()->json([
+            'message'=>'your article is delete',]);}
+        else {            return response()->json([
                 'message'=>'unauthorized',
             ]);
         }
@@ -236,12 +248,53 @@ class TrainerOperationController extends Controller
             }
     }
 }
-
-
         return response()->json([
             'message' => 'the user enrolled in trainer challenge',
             'data' => $enrolledUsers
         ], 200);
+    }
+
+    public function addproduct(Request $request){
+        $trainer_id=auth()->user()->id;
+        $request->validate([
+            'image' => 'required|image||mimes:jpeg,png,jpg,gif|max:2048',
+            'name' => 'required|string',
+            'price' => 'required|numeric|min:1',
+
+        ]);
+        $product=new Product();
+        $image=$request->file('image');
+        $product_image=null;
+        if ($request->hasFile('image')) {
+
+            $product_image=time() . '.' .$image->getClientOriginalExtension();
+            $image->move(public_path('product_images'),$product_image);
+            $product_image='product_images/'.$product_image;
+        }
+        $product->image = $product_image;
+        $product->price=$request->price;
+        $product->name=$request->name;
+        $product->trainer_id=$trainer_id;
+        $product->save();
+
+        return response()->json([
+            'message'=>'your product added successfully',
+        ],200);
+    }
+    public function deleteproduct($product_id){
+        $product=Product::where('id',$product_id)->first();
+        $product->delete();
+        return response()->json([
+            'message'=>'your product deleted successfully',
+        ],200);
+    }
+    public function getproductstrainer(){
+        $trainer_id=auth()->user()->id;
+        $products=Product::where('trainer_id',$trainer_id)->get();
+        return response()->json([
+            'message'=>'your products',
+            'products'=>$products,
+        ]);
     }
 
 }
