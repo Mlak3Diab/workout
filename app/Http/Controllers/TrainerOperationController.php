@@ -46,8 +46,6 @@ class TrainerOperationController extends Controller
     }
 
 
-
-
     public function getinfo(Request $request){
         $trainer_id=auth()->user()->id;
         $trainer=Trainer::where('id',$trainer_id)->first();
@@ -115,7 +113,7 @@ class TrainerOperationController extends Controller
 
 
     //edit username _POST
-    public function editusername(Request $request){
+    public function editUserName(Request $request){
         $trainer=auth()->user();
         $request->validate([ 'username'=>'required',]);
         $trainer->username=$request->username;
@@ -128,7 +126,7 @@ class TrainerOperationController extends Controller
 
 
     //get all exercises GET
-    public function getallexercises(){
+    public function getAllExercises(){
         $exercises=Exercise::all();
         return response()->json([
             'data'=>$exercises,
@@ -141,7 +139,7 @@ class TrainerOperationController extends Controller
         $trainer_id=auth()->user()->id;
 
         $validator = Validator::make($request->all(), [
-            'image' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'total_calories' => 'nullable|integer',
             'total_time' => 'nullable|integer',
             'muscle' => 'required|in:abs,chest,arm,leg,shoulder and back',
@@ -157,10 +155,23 @@ class TrainerOperationController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
+        // Store the image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('challenge_images'), $imageName);
+            $imagePath = 'challenge_images/' . $imageName;
+        } else {
+
+            return response()->json(['error' => 'Image is required.'], 400);
+        }
+
         // Create the challenge
         $challenge = new Challenge();
+
         $challenge->fill($request->except('exercises'));
         $challenge->trainer_id=$trainer_id;
+        $challenge->image = $imagePath;
         $challenge->save();
 
         // Attach exercises
@@ -228,31 +239,33 @@ class TrainerOperationController extends Controller
     }
 
 
-    public function getUserEnrolledChallengesByTrainer()
-    {
+    public function getUserEnrolledChallengesByTrainer(){
+
         $trainerId=auth()->user()->id;
 
-     // Retrieve challenges created by the given trainer
-    $challenges = Challenge::where('trainer_id', $trainerId)->get();
+        // Retrieve challenges created by the given trainer
+        $challenges = Challenge::where('trainer_id', $trainerId)->get();
 
-    // Initialize an empty collection to store enrolled users
-    $enrolledUsers = collect();
+        // Initialize an empty collection to store enrolled users
+        $enrolledUsers = collect();
 
-    // Iterate through the challenges and retrieve users enrolled in each challenge
-    foreach ($challenges as $challenge) {
+        // Iterate through the challenges and retrieve users enrolled in each challenge
+        foreach ($challenges as $challenge) {
 
-        $users = $challenge->users()->get();
-        foreach ($users as $user) {
-            if (!$enrolledUsers->contains('id', $user->id)) {
-                $enrolledUsers->push($user);
+            $users = $challenge->users()->get();
+            foreach ($users as $user) {
+                if (!$enrolledUsers->contains('id', $user->id)) {
+                    $enrolledUsers->push($user);
+                }
             }
-    }
-}
+        }
+
         return response()->json([
             'message' => 'the user enrolled in trainer challenge',
             'data' => $enrolledUsers
         ], 200);
     }
+
 
     public function addproduct(Request $request){
         $trainer_id=auth()->user()->id;

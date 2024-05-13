@@ -31,36 +31,39 @@ use App\Http\Controllers\UserOperationController;
 
 
 Route::post('user/register',[AuthController::class, 'userRegister']);//postman
+Route::post('user/login',[AuthController::class, 'userLogin']);//postman
 Route::post('user/password/email',  [AuthController::class,'userForgetPassword']);//postman
 Route::post('user/password/code/check', [AuthController::class,'userCheckCode']);//postman
 Route::post('user/password/reset', [AuthController::class ,'userResetPassword']);//postman
 Route::post('user/CheckCodeemailverification', [AuthController::class,'userCheckCodeemailverification']);//postman
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user','myverified']], function () {
-        Route::post('login',[AuthController::class, 'userLogin']);//postman
+
         Route::get('logout', [AuthController::class, 'userLogout']);  //postman
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);   //postman
         Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);   //postman
         Route::get('deleteprofile',[UserOperationController::class,'deleteprofile']); //postman
-        Route::get('getinfo', [UserOperationController::class, 'getinfo']);   //postman
+        Route::get('getProfile', [UserOperationController::class, 'getinfo']);   //postman
         Route::post('add_weight', [UserOperationController::class, 'addWeight']);   //postman
         Route::get('getweights', [UserOperationController::class, 'getallweights']);   //postman
         Route::post('editusername', [UserOperationController::class, 'editusername']);   //postman
         Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);   //postman
-        Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);
-        Route::get('getallarticles',[UserOperationController::class, 'getallarticles']);
-        Route::get('getinfoonearticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);
+        Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);   //postman
+        Route::get('getTotalTimeAndCalories', [UserOperationController::class, 'getTotalTimeAndCalories']);   //postman
+        Route::get('getAllArticles',[UserOperationController::class, 'getallarticles']);   //postman
+        Route::get('getInfoOneArticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);   //postman
         Route::post('makeplan',[UserOperationController::class, 'makeplan']);   //postman
-        Route::get('getplan',[UserOperationController::class, 'getplan']);
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);   //postman
         Route::get('getAllExercisesForCourse/{course_id}',[UserOperationController::class, 'getAllExercisesForCourse']);   //postman
+        Route::get('getExerciseInfoForCourse/{course_id}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForCourse']);   //postman
         Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);   //postman
         Route::get('getChallengeExercises/{challenge_id}', [UserOperationController::class, 'getChallengeExercises']);
         Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);   //postman
-        Route::get('getexercisesfordayinweek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
+        Route::get('getExerciseInfoForChallenge/{challenge_id}/{week}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForChallenge']);  //postman
+        Route::get('getPlanExercisesForWeek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
         Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
         Route::get('enrollUser/{challenge_id}',[UserOperationController::class,'enrollUser']);   //postman
-        Route::get('getallproducts', [UserOperationController::class, 'getallproducts']);   //postman
-        Route::get('buyaproduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
+        Route::get('getAllProducts', [UserOperationController::class, 'getallproducts']);   //postman
+        Route::get('buyaProduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
 
     });

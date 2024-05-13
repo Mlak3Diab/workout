@@ -33,23 +33,23 @@ use Illuminate\Support\Facades\Route;
 
 */
 
-Route::post('trainer/register',[AuthController::class, 'trainerRegister']);//postman
-//Route::post('trainer/login',[AuthController::class, 'trainerLogin'])->middleware('myverified');//postman
-Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPassword']);//postman
-Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);//postman
-Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);//postman
-Route::post('trainer/CheckCodeemailverification', [AuthController::class,'trainerCheckCodeemailverification']);//postman
+Route::post('trainer/register',[AuthController::class, 'trainerRegister']);  //postman
+Route::post('trainer/login',[AuthController::class, 'trainerLogin']);  //postman
+Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPassword']);  //postman
+Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);  //postman
+Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);  //postman
+Route::post('trainer/CheckCodeemailverification', [AuthController::class,'trainerCheckCodeemailverification']);  //postman
 Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer','myverified'] ],function(){
 
-    Route::post('login',[AuthController::class, 'trainerLogin']);//postman
-    Route::post('logout',[AuthController::class, 'trainerLogout']);//postman
+
+    Route::post('logout',[AuthController::class, 'trainerLogout']);  //postman
     Route::post('add_user_profile_image',[TrainerOperationController::class, 'addProfilePicture']);   //postman
-    Route::get('getinfo',[TrainerOperationController::class, 'getinfo']);   //postman
+    Route::get('getProfile',[TrainerOperationController::class, 'getinfo']);   //postman
     Route::post('addarticle',[TrainerOperationController::class, 'addarticle']);   //postman
     Route::get('getarticle',[TrainerOperationController::class, 'getarticle']);   //postman
     Route::delete('deletearticle/{article_id}',[TrainerOperationController::class, 'deletearticle']);   //postman
-    Route::post('editusername', [TrainerOperationController::class, 'editusername']);
-    Route::get('getallexercises', [TrainerOperationController::class, 'getallexercises']);
+    Route::post('editUserName', [TrainerOperationController::class, 'editUserName']);   //postman
+    Route::get('getAllExercises', [TrainerOperationController::class, 'getAllExercises']);  //postman
     Route::post('addChallenge', [TrainerOperationController::class, 'addChallenge']);  //postman
     Route::get('getTranierChallenge', [TrainerOperationController::class, 'getTranierChallenge']);   //postman
     Route::get('getChallengeData/{challenge_id}', [TrainerOperationController::class, 'getChallengeData']);   //postman
@@ -59,7 +59,6 @@ Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes
     Route::get('deleteprofile',[TrainerOperationController::class,'deleteprofile']); //postman
     Route::get('deleteproduct/{product_id}',[TrainerOperationController::class,'deleteproduct']);//postman
     Route::get('getproductstrainer',[TrainerOperationController::class,'getproductstrainer']); //postman
-
 
 
 });
