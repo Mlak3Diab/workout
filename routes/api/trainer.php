@@ -39,6 +39,7 @@ Route::post('trainer/password/email',  [AuthController::class,'trainerForgetPass
 Route::post('trainer/password/code/check', [AuthController::class,'trainerCheckCode']);  //postman
 Route::post('trainer/password/reset', [AuthController::class ,'trainerResetPassword']);  //postman
 Route::post('trainer/CheckCodeemailverification', [AuthController::class,'trainerCheckCodeemailverification']);  //postman
+
 Route::group( ['prefix' => 'trainer','middleware' => ['auth:trainer-api','scopes:trainer','myverified'] ],function(){
 
 

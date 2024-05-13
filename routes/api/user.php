@@ -53,6 +53,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getAllArticles',[UserOperationController::class, 'getallarticles']);   //postman
         Route::get('getInfoOneArticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);   //postman
         Route::post('makeplan',[UserOperationController::class, 'makeplan']);   //postman
+        Route::get('getPlan',[UserOperationController::class, 'getPlan']);  //postman
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);   //postman
         Route::get('getAllExercisesForCourse/{course_id}',[UserOperationController::class, 'getAllExercisesForCourse']);   //postman
         Route::get('getExerciseInfoForCourse/{course_id}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForCourse']);   //postman

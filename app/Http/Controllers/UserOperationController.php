@@ -357,6 +357,19 @@ class UserOperationController extends Controller
         ]);
     }
 
+    public function getPlan(){
+        $user_id = auth()->user()->id;
+        $user_plan = Plan::where('user_id',$user_id)->first();
+
+        return response()->json([
+            'plan' => [
+                'id' => $user_plan->id,
+                'user_id' => $user_plan->user_id,
+                'exercises' => $user_plan->exercises,
+            ]
+        ], 200);
+    }
+
     public function getAllCourses(){
 
         $courses = Course::all();
