@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserOperationController;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -68,3 +69,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('buyaProduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
 
     });
+
+
+
+    Route::post('sendChallengeNotification', [NotificationController::class, 'sendChallengeNotification']);

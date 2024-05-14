@@ -29,6 +29,7 @@ class  AuthController extends Controller
               'regex:/[0-9]/',      // must contain at least one digit
               'regex:/[@$!%*#?&]/', // must contain a special character
           ],
+          'fcm_token' => 'required',
           'weight' => 'required|numeric|min:1',
           'length' => 'required|numeric|min:1|integer',
           'age' => 'required|integer',

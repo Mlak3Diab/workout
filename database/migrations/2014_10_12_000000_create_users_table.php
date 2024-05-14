@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('fcm_token');
             $table->double('weight')->nullable();
             $table->integer('length')->nullable();
             $table->integer('age')->nullable();

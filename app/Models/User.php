@@ -23,6 +23,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'fcm_token',
         'weight',
         'length',
         'age',
