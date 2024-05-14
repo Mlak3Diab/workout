@@ -69,7 +69,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('buyaProduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
 
     });
+Route::post('sendnotificationsmulti',[NotificationController::class, 'sendnotificationsmulti']);
+Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
 
 
 
-    Route::post('sendChallengeNotification', [NotificationController::class, 'sendChallengeNotification']);
+
+
+    //Route::post('sendChallengeNotification', [NotificationController::class, 'sendChallengeNotification']);

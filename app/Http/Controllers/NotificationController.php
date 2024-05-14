@@ -2,64 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class NotificationController extends Controller
 {
+    public function refreshtoken(Request $request){
+        $user_id=auth()->user()->id;
+        $fcm_token=$request->fcm_token;
+        User::where('id',$user_id)->update(['fcm_token'=>$fcm_token]);
+        return User::find($user_id);
+    }
 
-    public function sendChallengeNotification(Request $request){
-
-
-        $SERVER_API_KEY = 'API SERVER KEY';
-
-        $token_1 = $request->tokens;
-
-        $data = [
-
-            "registration_ids" => [
-                $token_1
-            ],
-
-            "notification" => [
-
-                "title" => 'Welcome',
-
-                "body" => 'Description',
-
-                "sound"=> "default" // required for sound on ios
-
-            ],
-
-        ];
-
-        $dataString = json_encode($data);
-
-        /*$headers = [
-
-            'Authorization: key=' . $SERVER_API_KEY,
-
-            'Content-Type: application/json',
-
-        ];
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-
-        curl_setopt($ch, CURLOPT_POST, true);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-*/
-        $response = curl_exec($ch);
-
-        dd($response);
+//we want send notifications to multi users
+    public function sendnotificationsmulti(Request $request){
+        $user_ids=$request->user_ids;
+        //we take tokens of all ids users
+        $fcm_tokens=User::find($user_ids)->pluck('fcm_token');
+        $server_key=env('FCM_SERVER_KEY');
+        $fcm=Http::acceptJson()->withToken($server_key)->post(
+            'https://fcm.googleapis.com/fcm/send',
+            [
+                //token user
+                'registration_ids'=>$fcm_tokens,
+                'notification'=>[
+                    'title'=>'hello',
+                    'body'=>'welcome in my app'
+                ]
+            ]
+        );
+        return json_decode($fcm);
 
 
     }
+
 }
