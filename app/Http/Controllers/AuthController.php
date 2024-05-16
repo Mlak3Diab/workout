@@ -29,17 +29,24 @@ class  AuthController extends Controller
               'regex:/[0-9]/',      // must contain at least one digit
               'regex:/[@$!%*#?&]/', // must contain a special character
           ],
-          'fcm_token' => 'required',
           'weight' => 'required|numeric|min:1',
           'length' => 'required|numeric|min:1|integer',
           'age' => 'required|integer',
         ]);
-        $input=$request->all();
-        $input['password']=bcrypt($input['password']);
-        $input['activation_token']=Str::random(60);
-        $user=User::query()->create($input);
+        //$input=$request->all();
+        $user=new User();
+        //$input['password']=bcrypt($input['password']);
+        // $input['activation_token']=Str::random(60);
+        //$user=User::query()->create($input);
+        $user->username=$request->username;
+        $user->email=$request->email;
+        $user->password=bcrypt($request->password);
+        $user->weight=$request->weight;
+        $user->length=$request->length;
+        $user->age=$request->age;
+        $user->fcm_token="djgvhd";
         $accesstoken= $user->createToken('MyApp',['user'])->accessToken;
-
+        $user->save();
         Weight::create([
         'weight_value' => $request->input('weight'),
         'user_id' => $user->id,
@@ -203,11 +210,17 @@ class  AuthController extends Controller
             ],
             'cv' => 'required',
         ]);
-        $input=$request->all();
-        $input['password']=bcrypt($input['password']);
-        $input['activation_token']=Str::random(60);
+        //$input=$request->all();
+        //$input['password']=bcrypt($input['password']);
+        //$input['activation_token']=Str::random(60);
 
-        $trainer=Trainer::query()->create($input);
+        //$trainer=Trainer::query()->create($input);
+        $trainer=new Trainer();
+        $trainer->username=$request->username;
+        $trainer->email=$request->email;
+        $trainer->password=bcrypt($request->password);
+        $trainer->cv=$request->cv;
+        $trainer->save();
         $accesstoken= $trainer->createToken('MyApp',['trainer'])->accessToken;
 
         //generate random code
