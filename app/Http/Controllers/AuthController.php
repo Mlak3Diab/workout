@@ -9,6 +9,7 @@ use App\Models\ResetCodePassword;
 use App\Models\Trainer;
 use App\Models\User;
 use App\Models\Weight;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -31,19 +32,14 @@ class  AuthController extends Controller
           ],
           'weight' => 'required|numeric|min:1',
           'length' => 'required|numeric|min:1|integer',
-          'age' => 'required|integer',
         ]);
-        //$input=$request->all();
+
         $user=new User();
-        //$input['password']=bcrypt($input['password']);
-        // $input['activation_token']=Str::random(60);
-        //$user=User::query()->create($input);
         $user->username=$request->username;
         $user->email=$request->email;
         $user->password=bcrypt($request->password);
         $user->weight=$request->weight;
         $user->length=$request->length;
-        $user->age=$request->age;
         $user->fcm_token="djgvhd";
         $accesstoken= $user->createToken('MyApp',['user'])->accessToken;
         $user->save();

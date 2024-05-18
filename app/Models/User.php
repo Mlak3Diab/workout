@@ -26,7 +26,6 @@ class User extends Authenticatable
         'fcm_token',
         'weight',
         'length',
-        'age',
         'BMI',
         'total_time_practice',
         'total_calorie',
