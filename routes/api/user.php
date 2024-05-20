@@ -43,7 +43,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('logout', [AuthController::class, 'userLogout']);  //postman
         Route::get('getBMI', [UserOperationController::class, 'GetBMI']);   //postman
         Route::post('add_user_profile_image', [UserOperationController::class, 'addProfilePicture']);   //postman
-        Route::get('deleteprofile',[UserOperationController::class,'deleteprofile']); //postman
+        Route::get('deleteprofile',[UserOperationController::class, 'deleteprofile']); //postman
         Route::get('getProfile', [UserOperationController::class, 'getinfo']);   //postman
         Route::post('add_weight', [UserOperationController::class, 'addWeight']);   //postman
         Route::get('getweights', [UserOperationController::class, 'getallweights']);   //postman
@@ -64,14 +64,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getExerciseInfoForChallenge/{challenge_id}/{week}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForChallenge']);  //postman
         Route::get('getPlanExercisesForWeek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
         Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
-        Route::get('enrollUser/{challenge_id}',[UserOperationController::class,'enrollUser']);   //postman
-        Route::get('getAllProducts', [UserOperationController::class, 'getallproducts']);   //postman
-        Route::get('buyaProduct/{product_id}', [UserOperationController::class, 'buyaproduct']);   //postman
+        Route::get('enrollUser/{challenge_id}',[UserOperationController::class, 'enrollUser']);   //postman
+        Route::get('finishChallenge/{challenge_id}', [UserOperationController::class, 'finishChallenge']);
+        Route::get('getClassification', [UserOperationController::class, 'getClassification']);
+
 
     });
 Route::post('sendnotificationsmulti',[NotificationController::class, 'sendnotificationsmulti']);
 Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
-
 
 
 

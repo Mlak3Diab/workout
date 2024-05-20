@@ -41,6 +41,9 @@ class  AuthController extends Controller
         $user->weight=$request->weight;
         $user->length=$request->length;
         $user->fcm_token="djgvhd";
+        $user->total_calorie = 0;
+        $user->total_time_practice = 0;
+        $user->points = 0;
         $accesstoken= $user->createToken('MyApp',['user'])->accessToken;
         $user->save();
         Weight::create([

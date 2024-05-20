@@ -113,10 +113,14 @@ class UserOperationController extends Controller
         $user=auth()->user();
         $total_time = $user->total_time_practice;
         $total_calories = $user->total_calorie;
+        $points = $user->points;
+        $classification = $user->classification;
 
         return response()->json([
             'total time' => $total_time,
-            'total calories' => $total_calories
+            'total calories' => $total_calories,
+            'points' => $points,
+            'classificatoin' => $classification,
         ]);
     }
 
@@ -496,6 +500,7 @@ class UserOperationController extends Controller
         ]);
     }
 
+
     public function enrollUser($challenge_id)
     {
         $user = auth()->user();
@@ -525,36 +530,47 @@ class UserOperationController extends Controller
 
     }
 
-    public function getallproducts(){
-        $products=Product::all();
+
+    public function finishChallenge($challenge_id){
+
+        $user = auth()->user();
+
+        $challenge = Challenge::where('id' ,$challenge_id)->first();
+        $total_calories = $challenge->total_calories;
+        $total_time = $challenge->total_time/60;
+        $points = $challenge->points;
+
+        $user->total_time_practice += $total_time;
+        $user->total_calorie += $total_calories;
+        $user->points += $points;
+        $user->save();
+
         return response()->json([
-            'message'=>'products in our app',
-            'products'=>$products,
+            'message' => 'the data of user updated succesfully',
+            'data' => $user->total_calorie ,$user->total_time_practice, $user->points
+        ]);
+
+    }
+
+    public function getClassification(){
+        $user = auth()->user();
+        $classification ="";
+        if($user->point < 100)
+            $classification = "Bronze";
+        if($user->point < 200)
+            $classification = "Silver";
+        if($user->point > 200)
+            $classification = "Golden";
+
+        $user->classification = $classification;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the classification apdated successfully.',
+            'data' => $classification,
         ]);
     }
 
-    public function buyaproduct($product_id){
-        $user=auth()->user();
-        $product=Product::findOrFail($product_id);
-        if($user->points>=$product->price && $product->status=='unsold'){
-            $user->points=$user->points-$product->price;
-            $user->save();
-            $product->status='sold';
-            $product->save();
-            Mail::to($user->email)->send(new sendAgentslistandConfirmation());
-
-            return response()->json([
-                'message'=>'yes you did it ,Check your email',
-            ]);
-        }
-        else{
-            return response()->json([
-                'message'=>'Oops!, You cant buy because you dont have enough money  ',
-            ]);
-        }
-
-
-    }
 
 
 }

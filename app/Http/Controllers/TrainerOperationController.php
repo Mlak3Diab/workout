@@ -144,6 +144,7 @@ class TrainerOperationController extends Controller
             'total_time' => 'nullable|integer',
             'muscle' => 'required|in:abs,chest,arm,leg,shoulder and back',
             'level' => 'required|in:beginner,intermediate,advanced',
+            'points' => 'required|integer',
             'exercises' => 'array|required',
             'exercises.*.id' => 'exists:exercises,id',
             'exercises.*.time' => 'nullable|integer',
@@ -171,6 +172,7 @@ class TrainerOperationController extends Controller
 
         $challenge->fill($request->except('exercises'));
         $challenge->trainer_id=$trainer_id;
+        $challenge->points = $request->points;
         $challenge->image = $imagePath;
         $challenge->save();
 
@@ -267,47 +269,5 @@ class TrainerOperationController extends Controller
     }
 
 
-    public function addproduct(Request $request){
-        $trainer_id=auth()->user()->id;
-        $request->validate([
-            'image' => 'required|image||mimes:jpeg,png,jpg,gif|max:2048',
-            'name' => 'required|string',
-            'price' => 'required|numeric|min:1',
-
-        ]);
-        $product=new Product();
-        $image=$request->file('image');
-        $product_image=null;
-        if ($request->hasFile('image')) {
-
-            $product_image=time() . '.' .$image->getClientOriginalExtension();
-            $image->move(public_path('product_images'),$product_image);
-            $product_image='product_images/'.$product_image;
-        }
-        $product->image = $product_image;
-        $product->price=$request->price;
-        $product->name=$request->name;
-        $product->trainer_id=$trainer_id;
-        $product->save();
-
-        return response()->json([
-            'message'=>'your product added successfully',
-        ],200);
-    }
-    public function deleteproduct($product_id){
-        $product=Product::where('id',$product_id)->first();
-        $product->delete();
-        return response()->json([
-            'message'=>'your product deleted successfully',
-        ],200);
-    }
-    public function getproductstrainer(){
-        $trainer_id=auth()->user()->id;
-        $products=Product::where('trainer_id',$trainer_id)->get();
-        return response()->json([
-            'message'=>'your products',
-            'products'=>$products,
-        ]);
-    }
 
 }

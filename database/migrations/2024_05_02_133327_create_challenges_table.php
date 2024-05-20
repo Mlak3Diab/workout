@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('total_time')->nullable();
             $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
             $table->enum('level',['beginner','intermediate','advanced']);
+            $table->integer('points')->nullable();
             $table->timestamps();
         });
     }

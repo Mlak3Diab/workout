@@ -22,7 +22,7 @@ class Trainer extends Model  implements Authenticatable
         'password',
         'cv',
         'image',
-      'email_verified_at',
+        'email_verified_at',
 
     ];
     public function products()

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('total_calorie')->nullable();
             $table->string('image')->nullable();
             $table->integer('points')->nullable();
+            $table->string('classification')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
