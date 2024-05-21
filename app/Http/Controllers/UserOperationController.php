@@ -532,34 +532,55 @@ class UserOperationController extends Controller
 
 
     public function finishChallenge($challenge_id){
-
         $user = auth()->user();
 
-        $challenge = Challenge::where('id' ,$challenge_id)->first();
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated'
+            ], 401);
+        }
+
+        $challenge = Challenge::find($challenge_id);
+
+        if (!$challenge) {
+            return response()->json([
+                'message' => 'Challenge not found'
+            ], 404);
+        }
+
         $total_calories = $challenge->total_calories;
-        $total_time = $challenge->total_time/60;
+        $total_time = $challenge->total_time / 60;
         $points = $challenge->points;
 
-        $user->total_time_practice += $total_time;
-        $user->total_calorie += $total_calories;
-        $user->points += $points;
+        $user->total_time_practice = $total_time;
+        $user->total_calorie = $total_calories;
+        $user->points = $points;
         $user->save();
 
         return response()->json([
-            'message' => 'the data of user updated succesfully',
-            'data' => $user->total_calorie ,$user->total_time_practice, $user->points
+            'message' => 'The data of user updated successfully',
+            'data' => [
+                'total_calories' => $total_calories,
+                'total_time' => round($total_time,0),
+                'points' => $points
+            ]
         ]);
-
     }
 
     public function getClassification(){
-        $user = auth()->user();
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+        $points = $user->points;
+        if($points <0)
+            return response()->json([
+                'message' => 'The Points is Negetive',
+            ],400);
         $classification ="";
-        if($user->point < 100)
+        if($points < 100 && $points >-1)
             $classification = "Bronze";
-        if($user->point < 200)
+        if($points < 200 && $points >= 100)
             $classification = "Silver";
-        if($user->point > 200)
+        if($points > 200)
             $classification = "Golden";
 
         $user->classification = $classification;
