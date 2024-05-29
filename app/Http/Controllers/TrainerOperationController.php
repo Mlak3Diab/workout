@@ -14,6 +14,7 @@ use App\Models\Challenge;
 use App\Models\Weight;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Integer;
 use Illuminate\Support\Facades\Validator;
@@ -75,6 +76,11 @@ class TrainerOperationController extends Controller
              $article->title = $request->title;
              $article->body = $request->body;
              $article->trainer_id = $trainer_id;
+             $tokens = User::pluck('fcm_token')->toArray();
+             $title="Add a new article";
+             $body="Let's read it ";
+             foreach ($tokens as $token) {
+                 $this->sendnotificationsmulti($token,$title,$body);}
              $article->save();
              return response()->json(['message' => 'your article added successfully']);
          }
@@ -174,6 +180,11 @@ class TrainerOperationController extends Controller
         $challenge->trainer_id=$trainer_id;
         $challenge->points = $request->points;
         $challenge->image = $imagePath;
+        $tokens = User::pluck('fcm_token')->toArray();
+        $title="Add a new challenge";
+        $body="Let's do the challenge and earn points :)";
+        foreach ($tokens as $token) {
+            $this->sendnotificationsmulti($token,$title,$body);}
         $challenge->save();
 
         // Attach exercises
@@ -204,6 +215,19 @@ class TrainerOperationController extends Controller
 
     }
 
+//we want send notifications to multi users
+    private function sendnotificationsmulti($token,$title,$body){
+        $server_key=env('FCM_SERVER_KEY');
+        $fcm=Http::acceptJson()->withToken($server_key)->post(
+            'https://fcm.googleapis.com/fcm/send',
+            [
+                //token user
+                'registration_ids'=>$token,
+                'notification'=>[
+                    'title'=>$title,
+                    'body'=>$body]
+            ]);
+        return json_decode($fcm);}
 
     public function getTranierChallenge(){
         $trainer_id=auth()->user()->id;
