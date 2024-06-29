@@ -67,11 +67,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('enrollUser/{challenge_id}',[UserOperationController::class, 'enrollUser']);   //postman
         Route::get('getClassification', [UserOperationController::class, 'getClassification']);
         Route::get('finishChallenge/{challenge_id}', [UserOperationController::class, 'finishChallenge']);
-
-
+        Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
     });
-Route::post('sendnotificationsmulti',[NotificationController::class, 'sendnotificationsmulti']);
-Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
+
+
 
 
 
