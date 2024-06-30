@@ -190,6 +190,21 @@ class UserOperationController extends Controller
     protected function makeplan(Request $request){
         $user_id=auth()->user()->id;
         $array= $request->all();
+
+        for($i = 1; $i<=sizeof($array);$i++ ){
+            if($array[1])
+                $array[1]="Full body";
+            if ($array[2])
+                $array[2]="chest";
+            if ($array[3])
+                $array[3]="shoulder and back";
+            if ($array[4])
+                $array[4]="arm";
+            if ($array[5])
+                $array[5]="abs";
+            if ($array[6])
+                $array[6]="leg";
+        }
         $plan=new Plan();
         $plan->user_id=$user_id;
         $plan->save();
