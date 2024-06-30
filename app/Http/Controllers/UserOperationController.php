@@ -389,15 +389,26 @@ class UserOperationController extends Controller
         ], 200);
     }
 
-    public function getAllCourses(){
 
-        $courses = Course::all();
+    public function getAllCourses()
+    {
+        $courses = Course::all()->map(function ($course) {
+            return [
+                'id' => $course->id,
+                'name' => $course->localized_name,
+                'total_calories' => $course->total_calories,
+                'total_time' => $course->total_time,
+                'muscle' => $course->localized_muscle,
+                'level' => $course->localized_level,
+            ];
+        });
+
         return response()->json([
-            'massege' => 'the all courses',
+            'message' => 'the all courses',
             'data' => $courses
         ]);
-
     }
+
 
     public function getAllExercisesForCourse($course_id){
 
