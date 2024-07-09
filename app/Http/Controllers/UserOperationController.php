@@ -361,15 +361,28 @@ class UserOperationController extends Controller
         ]);
     }
 
-    public function getPlan(){
+
+    public function getPlan()
+    {
         $user_id = auth()->user()->id;
-        $user_plan = Plan::where('user_id',$user_id)->first();
+        $user_plan = Plan::with('exercises')->where('user_id', $user_id)->firstOrFail();
+
+        $exercises = $user_plan->exercises->map(function ($exercise) {
+            return [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+
+            ];
+        });
 
         return response()->json([
             'plan' => [
                 'id' => $user_plan->id,
                 'user_id' => $user_plan->user_id,
-                'exercises' => $user_plan->exercises,
+                'exercises' => $exercises,
             ]
         ], 200);
     }
@@ -395,18 +408,32 @@ class UserOperationController extends Controller
     }
 
 
-    public function getAllExercisesForCourse($course_id){
 
+    public function getAllExercisesForCourse($course_id)
+    {
         $course = Course::findOrFail($course_id);
         $exercises = $course->exercises()->get();
-        return response()->json([
-            'massege' => 'the all exercises for one course',
-            'data' => $exercises,
-        ]);
 
+        $localizedExercises = $exercises->map(function ($exercise) {
+            return [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+            ];
+        });
+
+        return response()->json([
+            'message' => 'The all exercises for one course',
+            'data' => $localizedExercises,
+        ]);
     }
 
-    public function getExerciseInfoForCourse($course_id,$exercise_id){
+
+
+    public function getExerciseInfoForCourse($course_id, $exercise_id)
+    {
         $user_id=auth()->user()->id;
         $course=Course::where('id',$course_id)->first();
 
@@ -419,11 +446,18 @@ class UserOperationController extends Controller
                 'message' => 'Exercise Not Found',
             ], 404);
         }
+
         return response()->json([
             'message' => 'The Exercise Detail.',
-            'exercise' => $exercise,
-            'time' => $time,
-            'repetition' => $repetition,
+            'exercise' => [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+                'time' => $time->time,
+                'repetition' => $repetition->repetition,
+            ],
         ]);
     }
 
@@ -439,9 +473,23 @@ class UserOperationController extends Controller
 
         $challenge = Challenge::with('exercises')->findOrFail($challenge_id);
 
+        $exercises = $challenge->exercises()->get();
+
+        $localizedExercises = $exercises->map(function ($exercise) {
+            return [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+            ];
+        });
+
         return response()->json([
-            'data' => $challenge->exercises
+            'message' => 'The all exercises for the challenge',
+            'data' => $localizedExercises,
         ]);
+
     }
 
     public function getExercisesForChallengeByWeek($challengeId, $week)
@@ -453,13 +501,21 @@ class UserOperationController extends Controller
 
         $challenge = Challenge::findOrFail($challengeId);
 
-        $exercises = $challenge->exercises()
-            ->wherePivot('week', $week)
-            ->get();
+        $exercises = $challenge->exercises()->wherePivot('week', $week)->get();
 
         return response()->json([
-            'data' => $exercises
+            'message' => 'The Exercise Detail.',
+            'exercise' => [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+                'time' => $time->time,
+                'repetition' => $repetition->repetition,
+            ],
         ]);
+
     }
 
     public function getExerciseInfoForChallenge($challenge_id,$week_id,$exercise_id){
@@ -477,10 +533,16 @@ class UserOperationController extends Controller
         }
 
         return response()->json([
-            'message' => 'Exercise Detail For Callenge.',
-            'exercise' => $exercise,
-            'time' => $time,
-            'repetition' => $repetition,
+            'message' => 'The Exercise Detail.',
+            'exercise' => [
+                'id' => $exercise->id,
+                'name' => $exercise->localized_name,
+                'description' => $exercise->localized_description,
+                'gif' => $exercise->gif,
+                'calories' => $exercise->calories,
+                'time' => $time->time,
+                'repetition' => $repetition->repetition,
+            ],
         ]);
     }
 
@@ -497,7 +559,9 @@ class UserOperationController extends Controller
 
     //get info for each exercise in plan in this week
     public function getinfoforeachexerciseinplaninthisweek($week_id,$exercise_id){
+
         $user_id=auth()->user()->id;
+
         $plan=Plan::where('user_id',$user_id)->first();
         $exercise_for_day_in_week=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->first();
         $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_id)->select('time')->first();
