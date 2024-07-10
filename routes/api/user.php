@@ -54,12 +54,13 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getAllArticles',[UserOperationController::class, 'getallarticles']);   //postman
         Route::get('getInfoOneArticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);   //postman
         Route::post('makeplan',[UserOperationController::class, 'makeplan']);   //postman
-        Route::get('getPlan',[UserOperationController::class, 'getPlan']);  //postman
+        Route::get('getPlan/{week_id}',[UserOperationController::class, 'getPlan']);  //postman
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);   //postman
         Route::get('getAllExercisesForCourse/{course_id}',[UserOperationController::class, 'getAllExercisesForCourse']);   //postman
         Route::get('getExerciseInfoForCourse/{course_id}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForCourse']);   //postman
         Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);   //postman
-        Route::get('getChallengeExercises/{challenge_id}', [UserOperationController::class, 'getChallengeExercises']);
+    //new
+        Route::get('getChallengeExercises/{challenge_id}/{week}', [UserOperationController::class, 'getChallengeExercises']);
         Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);   //postman
         Route::get('getExerciseInfoForChallenge/{challenge_id}/{week}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForChallenge']);  //postman
         Route::get('getPlanExercisesForWeek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman

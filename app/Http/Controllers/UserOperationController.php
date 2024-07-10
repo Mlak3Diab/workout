@@ -376,17 +376,19 @@ class UserOperationController extends Controller
         ]);
     }
 
-    public function getPlan(){
+    public function getPlan($week_id){
+        $data=[];
         $user_id = auth()->user()->id;
-        $user_plan = Plan::where('user_id',$user_id)->first();
-
-        return response()->json([
-            'plan' => [
-                'id' => $user_plan->id,
-                'user_id' => $user_plan->user_id,
-                'exercises' => $user_plan->exercises,
-            ]
-        ], 200);
+        $plan = Plan::where('user_id',$user_id)->first();
+        $exercise_for_day_in_week=$plan->exercises()->wherePivot('number_of_week',$week_id)->get();
+        for($i=0 ;$i<sizeof($exercise_for_day_in_week);$i++){
+            $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_for_day_in_week[$i]->id)->select('time')->first();
+            $repetition=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_for_day_in_week[$i]->id)->select('repetition')->first();
+            $data[$i]=['exercise'=> $exercise_for_day_in_week[$i], 'time'=>$time , 'repetition'=> $repetition];
+        }
+     return response()->json([
+                'data' =>$data,
+        ]);
     }
 
 
@@ -449,14 +451,19 @@ class UserOperationController extends Controller
             'data' => $challenges,
         ]);
     }
-
-    public function getChallengeExercises($challenge_id){
-
-        $challenge = Challenge::with('exercises')->findOrFail($challenge_id);
-
+/////////new
+    public function getChallengeExercises($challenge_id,$week){
+        $data=[];
+        $challenge=Challenge::where('id',$challenge_id)->first();
+        $exercises=$challenge->exercises()->wherePivot('week',$week)->get();
+        for($i=0 ;$i<sizeof($exercises);$i++) {
+            $time = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('time')->first();
+            $repetition = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('repetition')->first();
+            $data[$i]=['exercise'=> $exercises[$i], 'time'=>$time , 'repetition'=> $repetition];
+        }
         return response()->json([
-            'data' => $challenge->exercises
-        ]);
+            'data' => $data,
+            ]);
     }
 
     public function getExercisesForChallengeByWeek($challengeId, $week)
