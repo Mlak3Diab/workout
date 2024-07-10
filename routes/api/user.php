@@ -48,26 +48,19 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::post('add_weight', [UserOperationController::class, 'addWeight']);   //postman
         Route::get('getweights', [UserOperationController::class, 'getallweights']);   //postman
         Route::post('editusername', [UserOperationController::class, 'editusername']);   //postman
-        Route::delete('deleteprofileimage', [UserOperationController::class, 'deleteprofileimage']);   //postman
         Route::get('finishCourse/{course_id}',[UserOperationController::class, 'finishCourse']);   //postman
         Route::get('getTotalTimeAndCalories', [UserOperationController::class, 'getTotalTimeAndCalories']);   //postman
         Route::get('getAllArticles',[UserOperationController::class, 'getallarticles']);   //postman
-        Route::get('getInfoOneArticle/{article_id}',[UserOperationController::class, 'getinfoonearticle']);   //postman
         Route::post('makeplan',[UserOperationController::class, 'makeplan']);   //postman
         Route::get('getPlan/{week_id}',[UserOperationController::class, 'getPlan']);  //postman
         Route::get('getAllCourses',[UserOperationController::class, 'getAllCourses']);   //postman
         Route::get('getAllExercisesForCourse/{course_id}',[UserOperationController::class, 'getAllExercisesForCourse']);   //postman
-        Route::get('getExerciseInfoForCourse/{course_id}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForCourse']);   //postman
         Route::get('getAllChallenge', [UserOperationController::class, 'getAllChallenge']);   //postman
-    //new
         Route::get('getChallengeExercises/{challenge_id}/{week}', [UserOperationController::class, 'getChallengeExercises']);
-        Route::get('getExercisesForChallengeByWeek/{challenge_id}/{week}', [UserOperationController::class, 'getExercisesForChallengeByWeek']);   //postman
-        Route::get('getExerciseInfoForChallenge/{challenge_id}/{week}/{exercise_id}', [UserOperationController::class, 'getExerciseInfoForChallenge']);  //postman
-        Route::get('getPlanExercisesForWeek/{week_id}',[UserOperationController::class,'getexercisesfordayinweek']);   //postman
-        Route::get('getinfoforeachexerciseinplaninthisweek/{week_id}/{exercise_id}',[UserOperationController::class,'getinfoforeachexerciseinplaninthisweek']);   //postman
         Route::get('enrollUser/{challenge_id}',[UserOperationController::class, 'enrollUser']);   //postman
         Route::get('getClassification', [UserOperationController::class, 'getClassification']);
         Route::get('finishChallenge/{challenge_id}', [UserOperationController::class, 'finishChallenge']);
+
         Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
     });
 
