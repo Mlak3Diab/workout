@@ -376,22 +376,24 @@ class UserOperationController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
-    public function getPlan($week_id){
-        $data=[];
-        $user_id = auth()->user()->id;
-        $plan = Plan::where('user_id',$user_id)->first();
-        $exercise_for_day_in_week=$plan->exercises()->wherePivot('number_of_week',$week_id)->get();
-        for($i=0 ;$i<sizeof($exercise_for_day_in_week);$i++){
-            $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_for_day_in_week[$i]->id)->select('time')->first();
-            $repetition=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise_for_day_in_week[$i]->id)->select('repetition')->first();
-            $data[$i]=['exercise'=> $exercise_for_day_in_week[$i], 'time'=>$time , 'repetition'=> $repetition];
-        }
-     return response()->json([
-                'data' =>$data,
-        ]);
-=======
 
+    public function getPlan($week_id)
+    {
+        $data = [];
+        $user_id = auth()->user()->id;
+        $plan = Plan::where('user_id', $user_id)->first();
+        $exercise_for_day_in_week = $plan->exercises()->wherePivot('number_of_week', $week_id)->get();
+        for ($i = 0; $i < sizeof($exercise_for_day_in_week); $i++) {
+            $time = $plan->exercises()->wherePivot('number_of_week', $week_id)->wherePivot('exercise_id', $exercise_for_day_in_week[$i]->id)->select('time')->first();
+            $repetition = $plan->exercises()->wherePivot('number_of_week', $week_id)->wherePivot('exercise_id', $exercise_for_day_in_week[$i]->id)->select('repetition')->first();
+            $data[$i] = ['exercise' => $exercise_for_day_in_week[$i], 'time' => $time, 'repetition' => $repetition];
+        }
+        return response()->json([
+            'data' => $data,
+        ]);
+
+    }
+    /*
     public function getPlan()
     {
         $user_id = auth()->user()->id;
@@ -415,8 +417,8 @@ class UserOperationController extends Controller
                 'exercises' => $exercises,
             ]
         ], 200);
->>>>>>> be6f75b5b254dba4046e2118677ffd4adf6e02ae
-    }
+
+    }*/
 
 
     public function getAllCourses()
@@ -499,22 +501,23 @@ class UserOperationController extends Controller
             'data' => $challenges,
         ]);
     }
-<<<<<<< HEAD
+
 /////////new
-    public function getChallengeExercises($challenge_id,$week){
-        $data=[];
-        $challenge=Challenge::where('id',$challenge_id)->first();
-        $exercises=$challenge->exercises()->wherePivot('week',$week)->get();
-        for($i=0 ;$i<sizeof($exercises);$i++) {
+    public function getChallengeExercises($challenge_id,$week)
+    {
+        $data = [];
+        $challenge = Challenge::where('id', $challenge_id)->first();
+        $exercises = $challenge->exercises()->wherePivot('week', $week)->get();
+        for ($i = 0; $i < sizeof($exercises); $i++) {
             $time = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('time')->first();
             $repetition = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('repetition')->first();
-            $data[$i]=['exercise'=> $exercises[$i], 'time'=>$time , 'repetition'=> $repetition];
+            $data[$i] = ['exercise' => $exercises[$i], 'time' => $time, 'repetition' => $repetition];
         }
         return response()->json([
             'data' => $data,
-            ]);
-=======
-
+        ]);
+    }
+/*
     public function getChallengeExercises($challenge_id){
 
         $challenge = Challenge::with('exercises')->findOrFail($challenge_id);
@@ -536,9 +539,8 @@ class UserOperationController extends Controller
             'data' => $localizedExercises,
         ]);
 
->>>>>>> be6f75b5b254dba4046e2118677ffd4adf6e02ae
-    }
-
+    }*/
+/*
     public function getExercisesForChallengeByWeek($challengeId, $week)
     {
         // Validate week input
@@ -563,7 +565,7 @@ class UserOperationController extends Controller
             ],
         ]);
 
-    }
+    }*/
 
     public function getExerciseInfoForChallenge($challenge_id,$week_id,$exercise_id){
         $user_id=auth()->user()->id;
