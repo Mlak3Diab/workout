@@ -345,25 +345,6 @@ class UserOperationController extends Controller
 
 
     public function getPlan($week_id)
-
-    {
-        $data = [];
-        $user_id = auth()->user()->id;
-        $plan = Plan::where('user_id', $user_id)->first();
-        $exercise_for_day_in_week = $plan->exercises()->wherePivot('number_of_week', $week_id)->get();
-        for ($i = 0; $i < sizeof($exercise_for_day_in_week); $i++) {
-            $time = $plan->exercises()->wherePivot('number_of_week', $week_id)->wherePivot('exercise_id', $exercise_for_day_in_week[$i]->id)->select('time')->first();
-            $repetition = $plan->exercises()->wherePivot('number_of_week', $week_id)->wherePivot('exercise_id', $exercise_for_day_in_week[$i]->id)->select('repetition')->first();
-            $data[$i] = ['exercise' => $exercise_for_day_in_week[$i], 'time' => $time, 'repetition' => $repetition];
-        }
-        return response()->json([
-            'data' => $data,
-        ]);
-
-    }
-    /*
-    public function getPlan()
-
     {
         $user_id = auth()->user()->id;
         $plan = Plan::where('user_id', $user_id)->first();
@@ -396,20 +377,9 @@ class UserOperationController extends Controller
         }
 
         return response()->json([
-<<<<<<< HEAD
-            'plan' => [
-                'id' => $user_plan->id,
-                'user_id' => $user_plan->user_id,
-                'exercises' => $exercises,
-            ]
-        ], 200);
-
-    }*/
-=======
             'data' => $data,
         ]);
     }
->>>>>>> 655e76bc082ac7eea82074964d4cd6f8938f7357
 
 
 
@@ -474,18 +444,6 @@ class UserOperationController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
-/////////new
-    public function getChallengeExercises($challenge_id,$week)
-    {
-        $data = [];
-        $challenge = Challenge::where('id', $challenge_id)->first();
-        $exercises = $challenge->exercises()->wherePivot('week', $week)->get();
-        for ($i = 0; $i < sizeof($exercises); $i++) {
-            $time = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('time')->first();
-            $repetition = $challenge->exercises()->wherePivot('week', $week)->wherePivot('exercise_id', $exercises[$i]->id)->select('repetition')->first();
-            $data[$i] = ['exercise' => $exercises[$i], 'time' => $time, 'repetition' => $repetition];
-=======
 
 
     public function getChallengeExercises($challenge_id, $week)
@@ -511,91 +469,10 @@ class UserOperationController extends Controller
                 'time' => $time->time,
                 'repetition' => $repetition->repetition,
             ];
->>>>>>> 655e76bc082ac7eea82074964d4cd6f8938f7357
         }
 
         return response()->json([
             'data' => $data,
-<<<<<<< HEAD
-        ]);
-    }
-/*
-    public function getChallengeExercises($challenge_id){
-
-        $challenge = Challenge::with('exercises')->findOrFail($challenge_id);
-
-        $exercises = $challenge->exercises()->get();
-
-        $localizedExercises = $exercises->map(function ($exercise) {
-            return [
-                'id' => $exercise->id,
-                'name' => $exercise->localized_name,
-                'description' => $exercise->localized_description,
-                'gif' => $exercise->gif,
-                'calories' => $exercise->calories,
-            ];
-        });
-
-        return response()->json([
-            'message' => 'The all exercises for the challenge',
-            'data' => $localizedExercises,
-        ]);
-
-    }*/
-/*
-    public function getExercisesForChallengeByWeek($challengeId, $week)
-    {
-        // Validate week input
-        if (!in_array($week, [1, 2, 3, 4])) {
-            return response()->json(['error' => 'Invalid week. Week must be 1, 2, 3, or 4.'], 400);
-        }
-
-        $challenge = Challenge::findOrFail($challengeId);
-
-        $exercises = $challenge->exercises()->wherePivot('week', $week)->get();
-
-        return response()->json([
-            'message' => 'The Exercise Detail.',
-            'exercise' => [
-                'id' => $exercise->id,
-                'name' => $exercise->localized_name,
-                'description' => $exercise->localized_description,
-                'gif' => $exercise->gif,
-                'calories' => $exercise->calories,
-                'time' => $time->time,
-                'repetition' => $repetition->repetition,
-            ],
-        ]);
-
-    }*/
-
-    public function getExerciseInfoForChallenge($challenge_id,$week_id,$exercise_id){
-        $user_id=auth()->user()->id;
-        $challenge=Challenge::where('id',$challenge_id)->first();
-
-        $exercise=$challenge->exercises()->wherePivot('week',$week_id)->wherePivot('exercise_id',$exercise_id)->first();
-        $time=$challenge->exercises()->wherePivot('week',$week_id)->wherePivot('exercise_id',$exercise_id)->select('time')->first();
-        $repetition=$challenge->exercises()->wherePivot('week',$week_id)->wherePivot('exercise_id',$exercise_id)->select('repetition')->first();
-
-        if($exercise == null){
-            return response()->json([
-                'message' => 'Exercise Not Found'
-            ], 404);
-        }
-
-        return response()->json([
-            'message' => 'The Exercise Detail.',
-            'exercise' => [
-                'id' => $exercise->id,
-                'name' => $exercise->localized_name,
-                'description' => $exercise->localized_description,
-                'gif' => $exercise->gif,
-                'calories' => $exercise->calories,
-                'time' => $time->time,
-                'repetition' => $repetition->repetition,
-            ],
-=======
->>>>>>> 655e76bc082ac7eea82074964d4cd6f8938f7357
         ]);
     }
 
