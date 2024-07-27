@@ -59,7 +59,8 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
         Route::get('getChallengeExercises/{challenge_id}/{week}', [UserOperationController::class, 'getChallengeExercises']);
         Route::get('enrollUser/{challenge_id}',[UserOperationController::class, 'enrollUser']);   //postman
         Route::get('getClassification', [UserOperationController::class, 'getClassification']);
-        Route::get('finishChallenge/{challenge_id}', [UserOperationController::class, 'finishChallenge']);
+        Route::get('finishDayChallenge/{challenge_id}/{week_id}', [UserOperationController::class, 'finishDayChallenge']);
+        Route::get('finishDayPlan/{week_id}', [UserOperationController::class, 'finishDayPlan']);
 
         Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
     });

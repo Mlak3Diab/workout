@@ -128,23 +128,7 @@ class UserOperationController extends Controller
     }
 
 
-    //add total time and kcal when finish the course - GIT
-    public function finishCourse($course_id){
-        $user_id = auth()->user()->id;
-        $user = User::where('id',$user_id)->first();
 
-        $course = Course::where('id',$course_id)->first();
-        $total_calories = $course->total_calories;
-        $total_time = $course->total_time/60;
-
-        $user->total_time_practice += $total_time;
-        $user->total_calorie += $total_calories;
-        $user->save();
-
-        return response()->json([
-            'message' => 'the time and calories added successfully'
-        ]);
-    }
 
     //get all articles GET
     public function getallarticles(){
@@ -508,41 +492,7 @@ class UserOperationController extends Controller
     }
 
 
-    public function finishChallenge($challenge_id){
-        $user = auth()->user();
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not authenticated'
-            ], 401);
-        }
-
-        $challenge = Challenge::find($challenge_id);
-
-        if (!$challenge) {
-            return response()->json([
-                'message' => 'Challenge not found'
-            ], 404);
-        }
-
-        $total_calories = $challenge->total_calories;
-        $total_time = $challenge->total_time / 60;
-        $points = $challenge->points;
-
-        $user->total_time_practice = $total_time;
-        $user->total_calorie = $total_calories;
-        $user->points = $points;
-        $user->save();
-
-        return response()->json([
-            'message' => 'The data of user updated successfully',
-            'data' => [
-                'total_calories' => $total_calories,
-                'total_time' => round($total_time,0),
-                'points' => $points
-            ]
-        ]);
-    }
 
     public function getClassification(){
         $user_id = auth()->user()->id;
@@ -566,6 +516,96 @@ class UserOperationController extends Controller
         return response()->json([
             'message' => 'the classification apdated successfully.',
             'data' => $classification,
+        ]);
+    }
+
+    //add total time and kcal when finish the course - GIT
+    public function finishCourse($course_id){
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+
+        $course = Course::where('id',$course_id)->first();
+        $total_calories = $course->total_calories;
+        $total_time = $course->total_time/60;
+
+        $user->total_time_practice += $total_time;
+        $user->total_calorie += $total_calories;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the time and calories added successfully'
+        ]);
+    }
+
+
+
+    public function finishDayPlan($week_id){
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+
+        $plan = Plan::where('user_id',$user_id)->first();
+
+        if (!$plan) {
+            return response()->json([
+                'message' => 'Plan not found'
+            ], 404);
+        }
+        $exercises = $plan->exercises()->wherePivot('number_of_week', $week_id)->get();
+
+        $total_time=0;
+        $total_calories=0;
+        foreach ($exercises as $exercise) {
+        $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise->id)->select('time')->first()->time;
+        $calories=$plan->exercises()->wherePivot('number_of_week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
+
+        $total_time = $total_time+$time;
+        $total_calories = $total_calories+$calories;
+        }
+
+        $total_time=$total_time/60;
+
+        $user->total_time_practice += $total_time;
+        $user->total_calorie += $total_calories;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the time and calories for challenge added successfully'
+        ]);
+    }
+
+
+
+
+    public function finishDayChallenge($challenge_id,$week_id){
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
+
+        $challenge = Challenge::find($challenge_id);
+
+        if (!$challenge) {
+            return response()->json([
+                'message' => 'Challenge not found'
+            ], 404);
+        }
+        $exercises = $challenge->exercises()->wherePivot('week', $week_id)->get();
+
+        $total_time=0;
+        $total_calories=0;
+        foreach ($exercises as $exercise) {
+        $time = $challenge->exercises()->wherePivot('week', $week_id)->wherePivot('exercise_id', $exercise->id)->select('time')->first()->time;
+        $calories = $challenge->exercises()->wherePivot('week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
+
+        $total_time = $total_time+$time;
+        $total_calories = $total_calories+$calories;
+        }
+        $total_time=$total_time/60;
+
+        $user->total_time_practice += $total_time;
+        $user->total_calorie += $total_calories;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the time and calories for challenge added successfully'
         ]);
     }
 
