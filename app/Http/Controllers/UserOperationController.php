@@ -569,7 +569,9 @@ class UserOperationController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'the time and calories for challenge added successfully'
+            'message' => 'the time and calories for challenge added successfully',
+            'time'=>$total_time,
+            'calories'=>$total_calories
         ]);
     }
 
@@ -605,10 +607,10 @@ class UserOperationController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'the time and calories for challenge added successfully'
+            'message' => 'the time and calories for challenge added successfully',
+            'time'=>$total_time,
+            'calories'=>$total_calories
         ]);
     }
-
-
 
 }

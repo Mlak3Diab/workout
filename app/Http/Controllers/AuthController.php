@@ -84,7 +84,10 @@ class  AuthController extends Controller
          $user = User::query()->select('users.*')->find(auth()->guard('user')->user()->id);
          $success = $user;
          $success['token'] = $user->createToken('MyApp', ['user'])->accessToken;
-         return response()->json($success);
+         return response()->json([
+             'status'=>200,
+         'data'=> $success]
+         ,200);
 
      }
      else{
