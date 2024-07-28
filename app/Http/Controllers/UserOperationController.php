@@ -105,13 +105,21 @@ class UserOperationController extends Controller
         $total_time = $user->total_time_practice;
         $total_calories = $user->total_calorie;
         $points = $user->points;
-        $classification = $user->classification;
 
+        if ($points <= 400) {
+            $user->classification="Bronze";
+        } else if ($points <= 900) {
+            $user->classification="Silver";
+        } else if ($points <= 1400) {
+            $user->classification="Golden";
+        } else {
+            $user->classification="Diamond";
+        }
+        $user->save();
         return response()->json([
             'total time' => $total_time,
             'total calories' => $total_calories,
             'points' => $points,
-            'classificatoin' => $classification,
         ]);
     }
 
@@ -533,7 +541,8 @@ class UserOperationController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'the time and calories added successfully'
+            'message' => 'the time and calories added successfully',
+            'data'=>$course,
         ]);
     }
 
