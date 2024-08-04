@@ -15,6 +15,7 @@ class Challenge extends Model
         'total_time',
         'total_calories',
         'muscle',
+        'rate',
 
     ];
 

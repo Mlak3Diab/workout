@@ -34,8 +34,8 @@ class UserOperationController extends Controller
         $lastWeight = Weight::where('user_id', $user->id)->latest()->first();
         $length = $user->length;
 
-       $bmi = round(($lastWeight->weight_value / ($length * $length)) *10000,2);
-       //  Update user's BMI
+        $bmi = round(($lastWeight->weight_value / ($length * $length)) *10000,2);
+        //  Update user's BMI
         $user->BMI = $bmi;
         $user->save();
         return response()->json([
@@ -59,7 +59,7 @@ class UserOperationController extends Controller
         $weight->save();
         return response()->json([
             'message'=>'The Weight Added Succesfully'
-            ]);
+        ]);
     }
 
 
@@ -67,7 +67,7 @@ class UserOperationController extends Controller
     public function addProfilePicture(Request $request) {
         $user = auth()->user();
         $request->validate([
-            'image' => 'image||mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -136,7 +136,24 @@ class UserOperationController extends Controller
     }
 
 
+    //add total time and kcal when finish the course - GIT
+    public function finishCourse($course_id){
+        $user_id = auth()->user()->id;
+        $user = User::where('id',$user_id)->first();
 
+        $course = Course::where('id',$course_id)->first();
+        $total_calories = $course->total_calories;
+        $total_time = $course->total_time/60;
+
+        $user->total_time_practice += $total_time;
+        $user->total_calorie += $total_calories;
+        $user->save();
+
+        return response()->json([
+            'message' => 'the time and calories added successfully',
+            'data'=>$course,
+        ]);
+    }
 
     //get all articles GET
     public function getallarticles(){
@@ -168,7 +185,7 @@ class UserOperationController extends Controller
         $plan->user_id=$user_id;
         $plan->save();
         for($j = 1 ; $j<=4;$j++ ){
-           for($i = 1; $i<=sizeof($array);$i++ ){
+            for($i = 1; $i<=sizeof($array);$i++ ){
                 if( $array[$i]=='abs'){
                     $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                     $course_id=$course->id;
@@ -184,9 +201,9 @@ class UserOperationController extends Controller
                     $plan->exercises()->attach($exercise3->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
                     $plan->exercises()->attach($exercise4->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
-              }
+                }
 
-                 if($array[$i]=='chest'){
+                if($array[$i]=='chest'){
                     $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
                     $course_id=$course->id;
                     $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
@@ -204,129 +221,129 @@ class UserOperationController extends Controller
 
                 }
 
-             if($array[$i]=='arm'){
-               $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
-               $course_id=$course->id;
-               $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-               $plan=Plan::find($plan->id);
-               $exercise9=Exercise::where('id',$ec[0]->exercise_id)->first();
-               $exercise10=Exercise::where('id',$ec[1]->exercise_id)->first();
-               $exercise11=Exercise::where('id',$ec[2]->exercise_id)->first();
-               $exercise12=Exercise::where('id',$ec[3]->exercise_id)->first();
+                if($array[$i]=='arm'){
+                    $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise9=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise10=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise11=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise12=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-               $plan->exercises()->attach($exercise9->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-               $plan->exercises()->attach($exercise10->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-               $plan->exercises()->attach($exercise11->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-               $plan->exercises()->attach($exercise12->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    $plan->exercises()->attach($exercise9->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise10->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise11->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise12->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
-           }//
+                }//
                 if($array[$i]=='leg'){
-                   $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise13=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise14=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise15=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise16=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise13=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise14=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise15=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise16=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise13->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise14->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise15->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise16->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    $plan->exercises()->attach($exercise13->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise14->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise15->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise16->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
-               }//
+                }//
                 if($array[$i]=='shoulder and back'){
-                   $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise17=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise18=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise19=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise20=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $course=Course::where('muscle',$array[$i])->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise17=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise18=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise19=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise20=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise17->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise18->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise19->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise20->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    $plan->exercises()->attach($exercise17->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise18->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise19->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise20->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
 
-               }
-               //full body
+                }
+                //full body
                 if( $array[$i]=='Full body'){
-                   //abs
-                   $course=Course::where('muscle','abs')->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise21=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise22=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise23=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise24=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    //abs
+                    $course=Course::where('muscle','abs')->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise21=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise22=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise23=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise24=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise21->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise22->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise23->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise24->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
-                   //chest
-                   $course=Course::where('muscle','chest')->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise25=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise26=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise27=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise28=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $plan->exercises()->attach($exercise21->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise22->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise23->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise24->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    //chest
+                    $course=Course::where('muscle','chest')->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise25=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise26=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise27=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise28=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise25->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise26->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise27->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise28->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
-                   //arm
-                   $course=Course::where('muscle','arm')->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise29=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise30=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise31=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise32=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $plan->exercises()->attach($exercise25->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise26->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise27->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise28->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    //arm
+                    $course=Course::where('muscle','arm')->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise29=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise30=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise31=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise32=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise29->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise30->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise31->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise32->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
-                   //leg
-                   $course=Course::where('muscle','leg')->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise33=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise34=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise35=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise36=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $plan->exercises()->attach($exercise29->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise30->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise31->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise32->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    //leg
+                    $course=Course::where('muscle','leg')->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise33=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise34=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise35=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise36=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise33->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise34->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise35->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise36->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
-                   //shoulder and back
-                   $course=Course::where('muscle','shoulder and back')->where('level',"beginner")->first();
-                   $course_id=$course->id;
-                   $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
-                   $plan=Plan::find($plan->id);
-                   $exercise37=Exercise::where('id',$ec[0]->exercise_id)->first();
-                   $exercise38=Exercise::where('id',$ec[1]->exercise_id)->first();
-                   $exercise39=Exercise::where('id',$ec[2]->exercise_id)->first();
-                   $exercise40=Exercise::where('id',$ec[3]->exercise_id)->first();
+                    $plan->exercises()->attach($exercise33->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise34->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise35->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise36->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                    //shoulder and back
+                    $course=Course::where('muscle','shoulder and back')->where('level',"beginner")->first();
+                    $course_id=$course->id;
+                    $ec=DB::table('course_exercise')->where('course_id',$course_id)->inRandomOrder()->limit(4)->get();
+                    $plan=Plan::find($plan->id);
+                    $exercise37=Exercise::where('id',$ec[0]->exercise_id)->first();
+                    $exercise38=Exercise::where('id',$ec[1]->exercise_id)->first();
+                    $exercise39=Exercise::where('id',$ec[2]->exercise_id)->first();
+                    $exercise40=Exercise::where('id',$ec[3]->exercise_id)->first();
 
-                   $plan->exercises()->attach($exercise37->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
-                   $plan->exercises()->attach($exercise38->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
-                   $plan->exercises()->attach($exercise39->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
-                   $plan->exercises()->attach($exercise40->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
-               }
+                    $plan->exercises()->attach($exercise37->id,['number_of_week'=>$j,'repetition'=>$ec[0]->repetition,'time'=>$ec[0]->time,]);
+                    $plan->exercises()->attach($exercise38->id,['number_of_week'=>$j,'repetition'=>$ec[1]->repetition,'time'=>$ec[1]->time,]);
+                    $plan->exercises()->attach($exercise39->id,['number_of_week'=>$j,'repetition'=>$ec[2]->repetition,'time'=>$ec[2]->time,]);
+                    $plan->exercises()->attach($exercise40->id,['number_of_week'=>$j,'repetition'=>$ec[3]->repetition,'time'=>$ec[3]->time,]);
+                }
 
-        }
+            }
         }
 
         return response()->json([
@@ -464,6 +481,7 @@ class UserOperationController extends Controller
         }
 
         return response()->json([
+            'id'=>$challenge_id,
             'data' => $data,
         ]);
     }
@@ -483,13 +501,14 @@ class UserOperationController extends Controller
             ], 404);
         }
 
-        // Check if the user is already enrolled in the challenge
-        if ($user->challenges()->where('challenge_id', $challenge->id)->exists()) {
-            return response()->json([
-                'message' => 'User is already enrolled in this challenge'
-            ], 400);
-        }
-
+        /*
+         // Check if the user is already enrolled in the challenge
+          if ($user->challenges()->where('challenge_id', $challenge->id)->exists()) {
+              return response()->json([
+                  'message' => 'User is already enrolled in this challenge'
+              ], 400);
+          }
+  */
         // Enroll the user in the challenge
         $user->challenges()->attach($challenge);
 
@@ -498,9 +517,6 @@ class UserOperationController extends Controller
         ], 200);
 
     }
-
-
-
 
     public function getClassification(){
         $user_id = auth()->user()->id;
@@ -527,27 +543,6 @@ class UserOperationController extends Controller
         ]);
     }
 
-    //add total time and kcal when finish the course - GIT
-    public function finishCourse($course_id){
-        $user_id = auth()->user()->id;
-        $user = User::where('id',$user_id)->first();
-
-        $course = Course::where('id',$course_id)->first();
-        $total_calories = $course->total_calories;
-        $total_time = $course->total_time/60;
-
-        $user->total_time_practice += $total_time;
-        $user->total_calorie += $total_calories;
-        $user->save();
-
-        return response()->json([
-            'message' => 'the time and calories added successfully',
-            'data'=>$course,
-        ]);
-    }
-
-
-
     public function finishDayPlan($week_id){
         $user_id = auth()->user()->id;
         $user = User::where('id',$user_id)->first();
@@ -564,14 +559,14 @@ class UserOperationController extends Controller
         $total_time=0;
         $total_calories=0;
         foreach ($exercises as $exercise) {
-        $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise->id)->select('time')->first()->time;
-        $calories=$plan->exercises()->wherePivot('number_of_week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
+            $time=$plan->exercises()->wherePivot('number_of_week',$week_id)->wherePivot('exercise_id',$exercise->id)->select('time')->first()->time;
+            $calories=$plan->exercises()->wherePivot('number_of_week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
 
-        $total_time = $total_time+$time;
-        $total_calories = $total_calories+$calories;
+            $total_time = $total_time+$time;
+            $total_calories = $total_calories+$calories;
         }
 
-        $total_time=$total_time/60;
+        //$total_time=$total_time/60;
 
         $user->total_time_practice += $total_time;
         $user->total_calorie += $total_calories;
@@ -603,13 +598,13 @@ class UserOperationController extends Controller
         $total_time=0;
         $total_calories=0;
         foreach ($exercises as $exercise) {
-        $time = $challenge->exercises()->wherePivot('week', $week_id)->wherePivot('exercise_id', $exercise->id)->select('time')->first()->time;
-        $calories = $challenge->exercises()->wherePivot('week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
+            $time = $challenge->exercises()->wherePivot('week', $week_id)->wherePivot('exercise_id', $exercise->id)->select('time')->first()->time;
+            $calories = $challenge->exercises()->wherePivot('week',$week_id)->where('exercise_id',$exercise->id)->select('calories')->first()->calories;
 
-        $total_time = $total_time+$time;
-        $total_calories = $total_calories+$calories;
+            $total_time = $total_time+$time;
+            $total_calories = $total_calories+$calories;
         }
-        $total_time=$total_time/60;
+        //$total_time=$total_time/60;
 
         $user->total_time_practice += $total_time;
         $user->total_calorie += $total_calories;
@@ -621,5 +616,71 @@ class UserOperationController extends Controller
             'calories'=>$total_calories
         ]);
     }
+    public function ratechallenge(Request $request,$idchallenge){
+        $user = auth()->user();
+        $challenge=Challenge::find($idchallenge);
+        $challenge->rate= $request->rate;
+        $challenge->save();
+    }
+    public function getCourseProgress($course_id,$exercise_id){
+        $data=[];
+        $sum_t=0;
+        $sum_e=0;
+        $user=auth()->user();
+        $course=Course::find($course_id)->first();
+        $exercise=Exercise::where('id',$exercise_id)->first();
+        $id =DB::table('course_exercise')->where('exercise_id', $exercise_id)->pluck('id')->first();
+        $total_exercises=DB::table('course_exercise')->where('course_id',$course_id)->get();
+        $exercises=DB::table('course_exercise')->where('course_id',$course_id)->where('id','>=',$id)->get();
+        foreach ($exercises as $exercise) {
+            $exercise=Exercise::where('id',$exercise->exercise_id)->first();
+            $time=DB::table('course_exercise')->where('course_id',$course_id)->where('exercise_id', $exercise->id)->value('time');
+            $repetition=DB::table('course_exercise')->where('course_id',$course_id)->where('exercise_id', $exercise->id)->value('repetition');
+
+
+            $data[] = [
+                'exercise' => [
+                    'id' => $exercise->id,
+                    'name' => $exercise->localized_name,
+                    'description' => $exercise->localized_description,
+                    'gif' => $exercise->gif,
+                    'calories' => $exercise->calories,
+                ],
+                'time' => $time,
+                'repetition' => $repetition
+            ];
+        }
+        foreach ($exercises as $exercise) {
+            $sum_e+=1;
+        }
+        foreach ($total_exercises as $exercise) {
+            $sum_t+=1;
+        }
+
+        $progress=($sum_e/$sum_t)*100;
+        $user->courses()->attach($course_id , ['progress' => $progress]);
+        return response()->json([
+            'data'=>$data,
+            'progress'=>$progress
+        ]);
+
+
+    }
+    public function deleteprogresscourse($course_id){
+        $user=auth()->user();
+        $progress=0.0;
+        $user->courses()->attach($course_id , ['progress' => 0.0,]);
+
+        return response()->json([
+
+            'progress'=>$progress
+        ]);
+    }
+
+
+
+
 
 }
+
+

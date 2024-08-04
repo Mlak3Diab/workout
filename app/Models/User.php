@@ -41,6 +41,10 @@ class User extends Authenticatable
     public function challenges(){
         return $this->belongsToMany(Challenge::class);
     }
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
