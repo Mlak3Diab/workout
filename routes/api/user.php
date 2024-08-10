@@ -64,6 +64,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
     Route::get('finishDayChallenge/{challenge_id}/{week_id}', [UserOperationController::class, 'finishDayChallenge']);
     Route::get('finishDayPlan/{week_id}', [UserOperationController::class, 'finishDayPlan']);
     Route::post('ratechallenge/{idchallenge}', [UserOperationController::class, 'ratechallenge']);
+    Route::post('levelsportive',[UserOperationController::class, 'levelsportive']);
     Route::post('refreshtoken',[NotificationController::class, 'refreshtoken']);
   });
 

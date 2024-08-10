@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('muscle',['abs','chest','arm','leg','shoulder and back']);
             $table->enum('level',['beginner','intermediate','advanced']);
             $table->integer('points')->nullable();
+            $table->integer('rate')->nullable();
             $table->timestamps();
         });
     }

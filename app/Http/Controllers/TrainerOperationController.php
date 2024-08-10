@@ -18,9 +18,17 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Integer;
 use Illuminate\Support\Facades\Validator;
+use App\Services\NotificationService;
 
 class TrainerOperationController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function addProfilePicture(Request $request) {
         $trainer = auth()->user();
         $request->validate([
@@ -58,35 +66,50 @@ class TrainerOperationController extends Controller
 
 
     //add article -POST
-     public function addarticle(Request $request){
-        $trainer_id=auth()->user()->id;
-        $request->validate([
-            'title'=>'required|string|max:60',
-            'body'=>'required|string',
-            'image'=>'required|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-         $article=new Article();
-         if ($request->hasFile('image')) {
-             $image = $request->file('image');
+    public function addarticle(Request $request)
+    {
+        $trainer_id = auth()->user()->id;
 
-             $article_image = time() . '.' . $image->getClientOriginalExtension();
-             $image->move(public_path('article_images'), $article_image);
-             $article_image = 'article_images/' . $article_image;
-             $article->image = $article_image;
-             $article->title = $request->title;
-             $article->body = $request->body;
-             $article->trainer_id = $trainer_id;
-             $tokens = User::pluck('fcm_token')->toArray();
-             $title="Add a new article";
-             $body="Let's read it ";
-             foreach ($tokens as $token) {
-                 $this->sendnotificationsmulti($token,$title,$body);}
-             $article->save();
-             return response()->json(['message' => 'your article added successfully']);
-         }
-         else{
-             return response()->json(['error' => 'No image uploaded'], 400);
-         }
+        // Validate the request
+        $request->validate([
+            'title' => 'required|string|max:60',
+            'body' => 'required|string',
+            'image' => 'required|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        // Create a new article instance
+        $article = new Article();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            $article_image = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('article_images'), $article_image);
+            $article_image = 'article_images/' . $article_image;
+            $article->image = $article_image;
+            $article->title = $request->title;
+            $article->body = $request->body;
+            $article->trainer_id = $trainer_id;
+
+            // Save the article to the database
+            $article->save();
+
+            // Retrieve the FCM tokens of users
+            $tokens = User::pluck('fcm_token')->toArray();
+            $title = "Add a new article";
+            $body = "Let's read it";
+
+            // Send notifications to all users
+            foreach ($tokens as $token) {
+                $user = User::where('fcm_token', $token)->first();
+
+                $this->notificationService->send($user, $title, $body);
+            }
+
+            return response()->json(['message' => 'Your article added successfully']);
+        } else {
+            return response()->json(['error' => 'No image uploaded'], 400);
+        }
     }
 
 
@@ -150,7 +173,7 @@ class TrainerOperationController extends Controller
             'total_time' => 'nullable|integer',
             'muscle' => 'required|in:abs,chest,arm,leg,shoulder and back',
             'level' => 'required|in:beginner,intermediate,advanced',
-            'points' => 'required|integer',
+            //'points' => 'required|integer',
             'exercises' => 'array|required',
             'exercises.*.id' => 'exists:exercises,id',
             'exercises.*.time' => 'nullable|integer',
@@ -178,14 +201,18 @@ class TrainerOperationController extends Controller
 
         $challenge->fill($request->except('exercises'));
         $challenge->trainer_id=$trainer_id;
-        $challenge->points = $request->points;
+       // $challenge->points = $request->points;
         $challenge->image = $imagePath;
+        $challenge->save();
         $tokens = User::pluck('fcm_token')->toArray();
         $title="Add a new challenge";
         $body="Let's do the challenge and earn points :)";
+        // Send notifications to all users
         foreach ($tokens as $token) {
-            $this->sendnotificationsmulti($token,$title,$body);}
-        $challenge->save();
+            $user = User::where('fcm_token', $token)->first();
+            $this->notificationService->send($user, $title, $body);
+        }
+
 
         // Attach exercises
         foreach ($request->input('exercises') as $exercise) {
@@ -214,7 +241,7 @@ class TrainerOperationController extends Controller
         ], 201);
 
     }
-
+/*
 //we want send notifications to multi users
     private function sendnotificationsmulti($token,$title,$body){
         $server_key=env('FCM_SERVER_KEY');
@@ -237,7 +264,7 @@ class TrainerOperationController extends Controller
             'data' => $challenges,
         ]);
     }
-
+*/
     public function getChallengeData($challenge_id){
         $challenge = Challenge::where('id',$challenge_id)->first();
         $exercises = $challenge->exercises()->get();

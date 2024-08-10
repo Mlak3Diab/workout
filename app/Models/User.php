@@ -32,6 +32,8 @@ class User extends Authenticatable
         'image',
         'email_verified_at',
         'points',
+        'classification',
+        'sportivelevel',
     ];
 
     public function Plan(){

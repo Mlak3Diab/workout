@@ -676,7 +676,19 @@ class UserOperationController extends Controller
             'progress'=>$progress
         ]);
     }
+    public function levelsportive(Request $request){
+        $user=auth()->user();
+        $request->validate([
+            'sportivelevel' => 'required'
+        ]);
+        $user->sportivelevel=$request->sportivelevel;
+        $user->save();
+        return response()->json([
+            'message'=>"stored successfully"
+        ]);
 
+
+    }
 
 
 

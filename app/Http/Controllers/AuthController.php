@@ -40,7 +40,7 @@ class  AuthController extends Controller
         $user->password=bcrypt($request->password);
         $user->weight=$request->weight;
         $user->length=$request->length;
-        $user->fcm_token="djgvhd";
+        $user->fcm_token="eDoIXY-bTQeH6ObM4p8P3W:APA91bHHC_rEKFAWpLOffe8MNASkcWrVWTpO-qyPOlrIRK7586Wgxva_jInCSS1wo8QfeANfAcTltpN3d3BE5M4oB7JkbZ4aPfTx6dK42QghVO-zq6sz1HkldAUFzZ3U3BzOlZTe5y9s";
         $user->total_calorie = 0;
         $user->total_time_practice = 0;
         $user->points = 0;

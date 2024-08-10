@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('points')->nullable();
             $table->string('classification')->nullable();
+            $table->string('sportivelevel')->default("beginner");
             $table->rememberToken();
             $table->timestamps();
         });
